@@ -471,17 +471,19 @@ export function calcularMedia(valores: number[]): number {
 
 **`src/calcular-media/tsconfig.json`** — `declaration: true` gera `src/index.d.ts` ao lado de `src/index.ts`; `emitDeclarationOnly` evita que `tsc` também gere `.js` (não necessário aqui, já que o arquivo não é executado, apenas documentado):
 
+IMPORTANTE: `outDir`/`rootDir` NAO devem apontar para a mesma pasta de `include` - o `tsc` exclui automaticamente o `outDir` da compilacao (para evitar recompilar seus proprios arquivos emitidos), e se `outDir` coincidir com a pasta de origem, isso zera os arquivos de entrada (`TS18003: No inputs were found`), erro real encontrado na primeira execucao do workflow de GitHub Actions. Por isso nem `outDir` nem `rootDir` sao definidos aqui - sem `outDir`, o `tsc` emite o `.d.ts` ao lado do `.ts` de origem por padrao:
+
 ```json
 {
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
+    "moduleResolution": "Bundler",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "src",
     "strict": true
   },
-  "include": ["src/index.ts"]
+  "include": ["src/**/*.ts"]
 }
 ```
 

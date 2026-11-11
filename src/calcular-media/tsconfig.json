@@ -5,8 +5,6 @@
     "moduleResolution": "Bundler",
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "src",
-    "rootDir": "src",
     "strict": true
   },
   "include": ["src/**/*.ts"]
