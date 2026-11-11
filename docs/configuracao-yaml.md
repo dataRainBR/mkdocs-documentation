@@ -9,28 +9,42 @@ Esta página explica, em detalhes e passo a passo, as quatro seções principais
 ```yaml
 nav:
   - Início: index.md
-  - Instalação: instalacao.md
-  - "Configuração do mkdocs.yml": configuracao-yaml.md
-  - "Identidade visual": personalizacao.md
-  - "Exemplos de código": exemplos-codigo.md
-  - "Exemplos do notebook": exemplos-notebook.md
+  - Começar:
+      - Instalação: instalacao.md
+      - Configuração: configuracao-yaml.md
+      - "Identidade visual": personalizacao.md
+  - Conteúdo:
+      - "Exemplos de código": exemplos-codigo.md
+      - Notebook: exemplos-notebook.md
+      - Imagens: imagens-recursos-visuais.md
+      - Diagramas: diagramas-arquitetura.md
+  - Ferramentas:
+      - Preview: playwright-preview.md
+      - "Docker e linguagens": dockerfile-outras-linguagens.md
+      - Extensões: extensoes-pymdownx.md
+      - Plugins: outros-plugins.md
+  - GitHub:
+      - Integração: integracao-github.md
+      - "CLI (`gh`)": github-cli.md
 ```
 
-A seção `nav` define o **menu de navegação** (a barra lateral ou superior) do site gerado. É ela que determina quais páginas existem, em que ordem aparecem e com qual título são exibidas para quem está lendo a documentação.
+A seção `nav` define o **menu de navegação** do site gerado. Além de páginas individuais, ela permite agrupar páginas em seções aninhadas. Com `navigation.tabs` ativo, as seções de primeiro nível aparecem como abas no cabeçalho; os capítulos ficam dentro delas, evitando que cada página ocupe uma aba própria.
 
-Cada linha da lista segue o mesmo padrão: um mapeamento entre um **título exibido** no menu e o **caminho de um arquivo `.md`** dentro da pasta `docs/`. Por exemplo, a entrada:
+Uma página individual associa um **título exibido** no menu ao **caminho de um arquivo `.md`** dentro de `docs/`. Uma seção associa um título a uma lista de páginas e/ou subseções. Por exemplo:
 
 ```yaml
-- "Configuração do mkdocs.yml": configuracao-yaml.md
+- Começar:
+    - Configuração: configuracao-yaml.md
 ```
 
-diz ao MkDocs: "crie uma entrada no menu chamada *Configuração do mkdocs.yml* e, quando o leitor clicar nela, mostre o conteúdo do arquivo `docs/configuracao-yaml.md`". Os caminhos à direita (`index.md`, `instalacao.md`, `configuracao-yaml.md`, etc.) são sempre relativos à pasta configurada em `docs_dir` (neste projeto, a pasta `docs/`), nunca caminhos absolutos.
+O grupo **Começar** reúne páginas relacionadas e aparece como uma única aba; a página **Configuração** abre `docs/configuracao-yaml.md`. Os caminhos são relativos à pasta configurada em `docs_dir` (neste projeto, `docs/`), nunca caminhos absolutos.
 
 Alguns detalhes importantes sobre essa sintaxe:
 
 - Quando o título não contém caracteres especiais (como `:` ou acentos problemáticos para o YAML), ele pode ser escrito sem aspas, como em `Início: index.md`.
-- Quando o título contém um `:` no meio do texto (como em `"Configuração do mkdocs.yml"`), ele precisa ser colocado entre aspas, pois o `:` tem significado especial em YAML (separa chave e valor). Por isso `"Configuração do mkdocs.yml"` e `"Exemplos de código"` aparecem entre aspas no arquivo.
-- A **ordem das entradas na lista define a ordem do menu**: neste projeto, o menu começa com Início → Instalação → Configuração do mkdocs.yml → Identidade visual → Exemplos de código → Exemplos do notebook.
+- Quando o título contém um `:` no meio do texto, ele precisa ser colocado entre aspas, pois o `:` tem significado especial em YAML (separa chave e valor).
+- A **ordem das entradas na lista define a ordem do menu**: o cabeçalho tem cinco abas — Início, Começar, Conteúdo, Ferramentas e GitHub — e cada seção agrupa seus capítulos.
+- Os rótulos curtos mantêm o cabeçalho compacto; em telas largas, `docs/stylesheets/extra.css` reduz levemente o tamanho da fonte e o espaçamento horizontal das abas.
 - Cada arquivo referenciado em `nav` precisa realmente existir dentro de `docs/`. Se um caminho estiver errado ou o arquivo não existir, o `mkdocs build` falha (ou gera um aviso, dependendo do modo `--strict`).
 
 ## `theme`: a aparência visual do site

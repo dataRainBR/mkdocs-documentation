@@ -12,19 +12,23 @@ edit_uri: edit/main/docs/
 
 nav:
   - Início: index.md
-  - Instalação: instalacao.md
-  - "Configuração do mkdocs.yml": configuracao-yaml.md
-  - "Identidade visual": personalizacao.md
-  - "Exemplos de código": exemplos-codigo.md
-  - "Exemplos do notebook": exemplos-notebook.md
-  - "Preview com Playwright": playwright-preview.md
-  - "Dockerfile e outras linguagens": dockerfile-outras-linguagens.md
-  - "Imagens e recursos visuais": imagens-recursos-visuais.md
-  - "Diagramas e arquitetura": diagramas-arquitetura.md
-  - "Integração com GitHub": integracao-github.md
-  - "GitHub CLI (gh)": github-cli.md
-  - "Extensões pymdownx": extensoes-pymdownx.md
-  - "Outros plugins": outros-plugins.md
+  - Começar:
+      - Instalação: instalacao.md
+      - Configuração: configuracao-yaml.md
+      - "Identidade visual": personalizacao.md
+  - Conteúdo:
+      - "Exemplos de código": exemplos-codigo.md
+      - Notebook: exemplos-notebook.md
+      - Imagens: imagens-recursos-visuais.md
+      - Diagramas: diagramas-arquitetura.md
+  - Ferramentas:
+      - Preview: playwright-preview.md
+      - "Docker e linguagens": dockerfile-outras-linguagens.md
+      - Extensões: extensoes-pymdownx.md
+      - Plugins: outros-plugins.md
+  - GitHub:
+      - Integração: integracao-github.md
+      - "CLI (`gh`)": github-cli.md
 
 theme:
   name: material
