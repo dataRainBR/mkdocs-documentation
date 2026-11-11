@@ -59,7 +59,7 @@ Esse trabalho de configuração é explicado seção por seção, com os trechos
 
 A anotação "Personalizações" corresponde aos ajustes feitos sobre o tema Material depois que a configuração básica já estava funcionando: escolha de fontes (`theme.font`), paleta de cores com variantes clara e escura (`theme.palette`), logo (`theme.logo`) e favicon (`theme.favicon`).
 
-Esses ajustes, incluindo onde guardar os arquivos de imagem usados por eles, são detalhados na página [Personalização](personalizacao.md).
+Esses ajustes, incluindo onde guardar os arquivos de imagem usados por eles, são detalhados na página [Identidade visual](personalizacao.md).
 
 ## 7. Visualizando no navegador
 

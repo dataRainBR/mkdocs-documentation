@@ -125,3 +125,23 @@ Há, porém, uma diferença prática importante em relação ao exemplo Python: 
     Se Node.js, npm e TypeDoc não estiverem instalados, o handler `typescript` não consegue gerar a documentação e o build falha ao processar esta diretiva.
 
     No GitHub Actions, o workflow instala o TypeDoc antes de executar `uv run mkdocs build --strict`. Em uma máquina local, instale Node.js e npm, execute `npm install --global typedoc` e depois rode o build do MkDocs.
+
+### Diagnóstico: incompatibilidade do decoder do TypeDoc
+
+Além de instalar o Node.js e o TypeDoc, o build precisa de versões compatíveis do handler TypeScript e do decoder que lê o JSON produzido pelo TypeDoc. Uma incompatibilidade entre `griffe-typedoc` 0.1.1 e a saída atual do TypeDoc fazia o build terminar com um erro semelhante a:
+
+```text
+Project.__init__() got an unexpected keyword argument 'schema_version'
+```
+
+Nesse caso, o TypeDoc já encontrou o ponto de entrada e produziu sua saída; a falha acontece depois, durante a desserialização do JSON pelo `griffe-typedoc`. Portanto, alterar o `tsconfig.json`, a diretiva desta página ou o ponto de entrada não corrige esse erro específico.
+
+A correção foi implementada no [commit upstream d0afb317](https://github.com/mkdocstrings/griffe-typedoc/commit/d0afb31733b2954daed464b5015db6f0e832a21e), que adiciona suporte ao campo `schema_version` no modelo `Project`. Até que essa correção esteja disponível em uma versão publicada no PyPI, este projeto fixa `griffe-typedoc` nesse commit em `pyproject.toml` e `uv.lock`. Mantenha os dois arquivos sincronizados ao atualizar dependências:
+
+```bash
+uv lock --check
+uv sync
+uv run mkdocs build --strict
+```
+
+Após essa correção, o build e o deploy pelo GitHub Actions foram executados com sucesso. Para acompanhar uma execução futura, consulte **Actions → Build e publica a documentação** ou use os comandos `gh run list` e `gh run watch` descritos em [GitHub CLI](github-cli.md).

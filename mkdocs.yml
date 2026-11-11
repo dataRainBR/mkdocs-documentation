@@ -14,7 +14,7 @@ nav:
   - Início: index.md
   - Instalação: instalacao.md
   - "Configuração do mkdocs.yml": configuracao-yaml.md
-  - Personalização: personalizacao.md
+  - "Identidade visual": personalizacao.md
   - "Exemplos de código": exemplos-codigo.md
   - "Exemplos do notebook": exemplos-notebook.md
   - "Preview com Playwright": playwright-preview.md
@@ -29,28 +29,37 @@ nav:
 theme:
   name: material
   logo: assets/logo.png
-  favicon: assets/favicon.png
+  favicon: assets/datarain-logo.ico
   font:
     text: Roboto
     code: Roboto Mono
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: indigo
+    - scheme: default
+      primary: custom
+      accent: custom
       toggle:
-        icon: material/brightness-7
-        name: "Mudar para modo escuro"
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: indigo
+        icon: material/weather-sunny
+        name: "Ativar modo escuro"
+    - scheme: slate
+      primary: custom
+      accent: custom
       toggle:
-        icon: material/brightness-4
-        name: "Mudar para modo claro"
+        icon: material/weather-night
+        name: "Ativar modo claro"
   features:
     - content.action.edit
     - content.action.view
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
 
 plugins:
   - search
@@ -123,3 +132,6 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css

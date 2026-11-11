@@ -29,7 +29,7 @@ Agora que você já sabe o que é o MkDocs e por que ele é útil, siga as pági
 
 1. [Instalação](instalacao.md)
 2. [Configuração do mkdocs.yml](configuracao-yaml.md)
-3. [Personalização](personalizacao.md)
+3. [Identidade visual](personalizacao.md)
 4. [Exemplos de código](exemplos-codigo.md)
 5. [Exemplos do notebook](exemplos-notebook.md)
 6. [Integração com GitHub](integracao-github.md)

@@ -11,7 +11,7 @@ nav:
   - Início: index.md
   - Instalação: instalacao.md
   - "Configuração do mkdocs.yml": configuracao-yaml.md
-  - Personalização: personalizacao.md
+  - "Identidade visual": personalizacao.md
   - "Exemplos de código": exemplos-codigo.md
   - "Exemplos do notebook": exemplos-notebook.md
 ```
@@ -28,9 +28,9 @@ diz ao MkDocs: "crie uma entrada no menu chamada *Configuração do mkdocs.yml* 
 
 Alguns detalhes importantes sobre essa sintaxe:
 
-- Quando o título não contém caracteres especiais (como `:` ou acentos problemáticos para o YAML), ele pode ser escrito sem aspas, como em `Início: index.md` ou `Personalização: personalizacao.md`.
+- Quando o título não contém caracteres especiais (como `:` ou acentos problemáticos para o YAML), ele pode ser escrito sem aspas, como em `Início: index.md`.
 - Quando o título contém um `:` no meio do texto (como em `"Configuração do mkdocs.yml"`), ele precisa ser colocado entre aspas, pois o `:` tem significado especial em YAML (separa chave e valor). Por isso `"Configuração do mkdocs.yml"` e `"Exemplos de código"` aparecem entre aspas no arquivo.
-- A **ordem das entradas na lista define a ordem do menu**: neste projeto, o menu aparece sempre como Início → Instalação → Configuração do mkdocs.yml → Personalização → Exemplos de código → Exemplos do notebook.
+- A **ordem das entradas na lista define a ordem do menu**: neste projeto, o menu começa com Início → Instalação → Configuração do mkdocs.yml → Identidade visual → Exemplos de código → Exemplos do notebook.
 - Cada arquivo referenciado em `nav` precisa realmente existir dentro de `docs/`. Se um caminho estiver errado ou o arquivo não existir, o `mkdocs build` falha (ou gera um aviso, dependendo do modo `--strict`).
 
 ## `theme`: a aparência visual do site
@@ -39,25 +39,40 @@ Alguns detalhes importantes sobre essa sintaxe:
 theme:
   name: material
   logo: assets/logo.png
-  favicon: assets/favicon.png
+  favicon: assets/datarain-logo.ico
   font:
     text: Roboto
     code: Roboto Mono
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: indigo
+    - scheme: default
+      primary: custom
+      accent: custom
       toggle:
-        icon: material/brightness-7
-        name: "Mudar para modo escuro"
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: indigo
+        icon: material/weather-sunny
+        name: "Ativar modo escuro"
+    - scheme: slate
+      primary: custom
+      accent: custom
       toggle:
-        icon: material/brightness-4
-        name: "Mudar para modo claro"
+        icon: material/weather-night
+        name: "Ativar modo claro"
+  features:
+    - content.action.edit
+    - content.action.view
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+
+extra_css:
+  - stylesheets/extra.css
 ```
 
 A seção `theme` define **qual tema visual** o MkDocs deve usar para renderizar o site e como esse tema deve se comportar. A chave `name: material` é a mais importante dela: diz ao MkDocs para usar o tema [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) em vez do tema padrão, mais simples, que vem embutido no MkDocs.
@@ -68,7 +83,7 @@ Por que usar o tema `material`? Alguns motivos práticos:
 - Já vem com suporte a modo claro/escuro, busca integrada com destaque dos termos encontrados, navegação em abas/seções e muitos outros recursos visuais.
 - É o tema mais usado e mais documentado do ecossistema MkDocs, o que facilita encontrar exemplos e resolver dúvidas.
 
-As demais chaves dentro de `theme` neste arquivo — `font` (fontes de texto e de código), `palette` (cores do tema, incluindo as variantes clara e escura) e `logo`/`favicon` (imagens de identidade visual) — controlam a personalização fina da aparência do site. Como esse assunto tem bastante detalhe próprio (como escolher fontes, como funcionam as variantes de paleta, onde colocar os arquivos de logo e favicon), ele é explicado em profundidade na página [Personalização](personalizacao.md), para não sobrecarregar esta página de configuração geral.
+As demais chaves dentro de `theme` neste arquivo — `font`, `palette` e `logo`/`favicon` — controlam a aparência do site. As cores institucionais são definidas em `docs/stylesheets/extra.css`, carregado pela opção `extra_css` do `mkdocs.yml`. Esses detalhes estão documentados em [Identidade visual](personalizacao.md).
 
 ## `plugins`: funcionalidades adicionais do MkDocs
 
@@ -164,6 +179,6 @@ A seção `markdown_extensions` lista **extensões do Python-Markdown** (a bibli
 | Seção | Para que serve | Página relacionada |
 |---|---|---|
 | `nav` | Define o menu de navegação, mapeando título → arquivo `.md` em `docs/` | — |
-| `theme` | Define o tema visual (Material) e seus detalhes (fonte, paleta, logo, favicon) | [Personalização](personalizacao.md) |
+| `theme` | Define o tema visual (Material) e seus detalhes (fonte, paleta, logo, favicon) | [Identidade visual](personalizacao.md) |
 | `plugins` | Habilita busca (`search`) e documentação automática de código (`mkdocstrings`, handlers `python` e `typescript`) | [Exemplos de código](exemplos-codigo.md) |
 | `markdown_extensions` | Habilita recursos extras de Markdown: admonitions, destaque de sintaxe e sumário com links âncora | — |

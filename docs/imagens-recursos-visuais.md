@@ -1,6 +1,6 @@
 # Imagens e recursos visuais
 
-Até aqui, as imagens mencionadas neste tutorial — como o logo e o favicon em [Personalização](personalizacao.md) — foram tratadas de forma bem simples: apenas um caminho de arquivo apontado por uma chave do `mkdocs.yml`. Mas o ecossistema do [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) oferece recursos específicos para enriquecer a forma como imagens aparecem dentro do **conteúdo** das páginas Markdown.
+Até aqui, as imagens mencionadas neste tutorial — como o logo e o favicon em [Identidade visual](personalizacao.md) — foram tratadas de forma bem simples: apenas um caminho de arquivo apontado por uma chave do `mkdocs.yml`. Mas o ecossistema do [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) oferece recursos específicos para enriquecer a forma como imagens aparecem dentro do **conteúdo** das páginas Markdown.
 
 Esta página cobre três formas de enriquecer imagens no Documentation_Site:
 
@@ -35,10 +35,10 @@ O `glightbox` atua no momento do `mkdocs build`: ele percorre o HTML gerado de *
 
 O ponto mais importante é que **isso acontece automaticamente para qualquer imagem Markdown**, sem exigir nenhuma marcação especial por imagem. Não é necessário envolver a imagem em um link, adicionar uma classe CSS ou qualquer atributo extra: basta que a imagem exista como `![alt](caminho)` em qualquer página do site, e o `glightbox` já cuida do resto durante o build.
 
-!!! note "Este projeto ainda não tem uma imagem binária real para demonstrar"
-    Assim como já foi registrado em [Personalização](personalizacao.md) (seção "Observação importante: este projeto ainda não tem imagens reais"), a pasta `docs/assets/` deste projeto não contém, por ora, nenhum arquivo de imagem binário real (`.png`, `.jpg`, `.svg` etc.) — apenas um `README.md` explicando a convenção da pasta. Por isso, não há aqui uma imagem renderizada de fato para você clicar e ver o lightbox em ação.
+!!! note "Logo e favicon DataRain"
+    A pasta `docs/assets/` já contém o logo e o favicon do site, descritos em [Identidade visual](personalizacao.md). Eles são recursos do tema; ainda não há nesta página uma imagem de conteúdo para demonstrar o lightbox.
 
-    Isso não é um problema: o comportamento do `glightbox` pode ser descrito em prosa e através dos exemplos de sintaxe desta página, sem depender de um arquivo real existir agora. O importante é entender a mecânica, que se aplica da mesma forma assim que uma imagem real for adicionada.
+    O comportamento do `glightbox` pode ser descrito em prosa e através dos exemplos de sintaxe desta página. Assim que uma imagem de conteúdo for adicionada, o plugin aplicará o lightbox automaticamente.
 
 ### Comportamento esperado com uma imagem real
 

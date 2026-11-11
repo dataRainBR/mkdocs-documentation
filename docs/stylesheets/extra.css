@@ -1,0 +1,107 @@
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: #3791A6;
+  --md-primary-fg-color--light: #55A6B8;
+  --md-primary-fg-color--dark: #132B40;
+  --md-accent-fg-color: #F27507;
+  --md-accent-fg-color--transparent: #F2750720;
+  --md-default-bg-color: #FFFFFF;
+  --md-default-fg-color: #132B40;
+  --md-default-fg-color--light: #526B7A;
+  --md-default-fg-color--lighter: #78909C;
+  --md-code-bg-color: #F2F2F2;
+  --md-code-fg-color: #132B40;
+  --md-typeset-a-color: #3791A6;
+  --md-primary-bg-color: #FFFFFF;
+  --md-primary-bg-color--light: #F2F2F2;
+  --md-footer-bg-color: #132B40;
+  --md-footer-bg-color--dark: #0D1E2C;
+  --md-footer-fg-color: #F2F2F2;
+  --md-footer-fg-color--light: #F2F2F2;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #132B40;
+  --md-primary-fg-color--light: #24465E;
+  --md-primary-fg-color--dark: #0D1E2C;
+  --md-accent-fg-color: #F27507;
+  --md-accent-fg-color--transparent: #F2750720;
+  --md-default-bg-color: #132B40;
+  --md-default-fg-color: #F2F2F2;
+  --md-default-fg-color--light: #D0DCE3;
+  --md-default-fg-color--lighter: #A9BBC6;
+  --md-code-bg-color: #0D1E2C;
+  --md-code-fg-color: #F2F2F2;
+  --md-typeset-a-color: #F27507;
+  --md-primary-bg-color: #F2F2F2;
+  --md-primary-bg-color--light: #D0DCE3;
+  --md-footer-bg-color: #0D1E2C;
+  --md-footer-bg-color--dark: #091521;
+  --md-footer-fg-color: #F2F2F2;
+  --md-footer-fg-color--light: #D0DCE3;
+}
+
+.md-typeset .md-button {
+  border-color: #F27507;
+  color: #F27507;
+  border-radius: 5px;
+}
+
+.md-typeset .md-button--primary {
+  background-color: #F27507;
+  border-color: #F27507;
+  color: #132B40;
+  font-weight: 600;
+}
+
+.md-typeset .md-button:hover {
+  background-color: #F25D07;
+  border-color: #F25D07;
+  color: #FFFFFF;
+}
+
+.md-typeset a:hover {
+  color: #F25D07;
+}
+
+.md-typeset code {
+  border-radius: 4px;
+}
+
+.md-tabs {
+  border-bottom: 2px solid #F27507;
+}
+
+::selection {
+  background: #F27507;
+  color: #132B40;
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 6px;
+  border-left-width: 4px;
+}
+
+.md-typeset .admonition.note,
+.md-typeset details.note,
+.md-typeset .admonition.success,
+.md-typeset details.success {
+  border-left-color: #3791A6;
+}
+
+.md-typeset .admonition.tip,
+.md-typeset details.tip,
+.md-typeset .admonition.important,
+.md-typeset details.important {
+  border-left-color: #F27507;
+}
+
+.md-typeset .admonition.warning,
+.md-typeset details.warning {
+  border-left-color: #F25D07;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  font-weight: 700;
+}

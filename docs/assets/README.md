@@ -1,9 +1,8 @@
 # assets
 
-Esta pasta armazena os recursos estáticos usados pelo tema do MkDocs (Material), como:
+Esta pasta armazena os recursos visuais utilizados pelo tema e pela documentação:
 
-- Logo do site (`theme.logo`)
-- Favicon do site (`theme.favicon`)
-- Outras imagens referenciadas pelas páginas do tutorial
+- `logo.png`: logo DataRain exibido no cabeçalho do site.
+- `datarain-logo.ico`: ícone DataRain utilizado como favicon.
 
-No momento o projeto ainda não possui arquivos binários reais de logo/favicon. Este arquivo existe apenas para garantir que a pasta `docs/assets/` seja versionada mesmo estando vazia de imagens. Quando um logo ou favicon real for adicionado, basta colocar o arquivo aqui e referenciá-lo em `mkdocs.yml` (por exemplo, `assets/logo.png`).
+Os caminhos desses arquivos são referenciados na seção `theme` do `mkdocs.yml`.
