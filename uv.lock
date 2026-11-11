@@ -325,14 +325,10 @@ wheels = [
 
 [[package]]
 name = "griffe-typedoc"
-version = "0.1.1"
-source = { registry = "https://pypi.org/simple" }
+version = "0.1.2.dev1+gd0afb31"
+source = { git = "https://github.com/mkdocstrings/griffe-typedoc.git?rev=d0afb31733b2954daed464b5015db6f0e832a21e#d0afb31733b2954daed464b5015db6f0e832a21e" }
 dependencies = [
     { name = "pydantic" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/a4/ba/886c811515cc0adbd6e3015fcbdc298af310e55dece4400399f27c7d88db/griffe_typedoc-0.1.1.tar.gz", hash = "sha256:eba5da8efe3d521d557e3ad4d62b2e9ebdae5a79328e0c9d37dc7306c34a6807", size = 44890, upload-time = "2026-10-06T11:02:58.346Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/86/2ef3b9f1d1f1eaef7c22950f787d5bcc0104d2ff3640e604bb693d0bdbc2/griffe_typedoc-0.1.1-py3-none-any.whl", hash = "sha256:19f786c1ea5607b02f8356354ba56fcb1a57ce70af877b41647afb724ff5607c", size = 24852, upload-time = "2026-10-06T11:02:57.222Z" },
 ]
 
 [[package]]
@@ -1279,6 +1275,7 @@ name = "teste-mkdocks"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "griffe-typedoc" },
     { name = "mkdocs" },
     { name = "mkdocs-awesome-pages-plugin" },
     { name = "mkdocs-exporter" },
@@ -1295,6 +1292,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "griffe-typedoc", git = "https://github.com/mkdocstrings/griffe-typedoc.git?rev=d0afb31733b2954daed464b5015db6f0e832a21e" },
     { name = "mkdocs", specifier = ">=1.6.1" },
     { name = "mkdocs-awesome-pages-plugin", specifier = ">=2.10.1" },
     { name = "mkdocs-exporter", specifier = ">=6.2.0" },

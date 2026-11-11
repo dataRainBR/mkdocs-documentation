@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "griffe-typedoc",
     "mkdocs>=1.6.1",
     "mkdocs-awesome-pages-plugin>=2.10.1",
     "mkdocs-exporter>=6.2.0",
@@ -18,3 +19,6 @@ dependencies = [
     "playwright>=1.65.0",
     "pymdown-extensions>=13.0",
 ]
+
+[tool.uv.sources]
+griffe-typedoc = { git = "https://github.com/mkdocstrings/griffe-typedoc.git", rev = "d0afb31733b2954daed464b5015db6f0e832a21e" }
