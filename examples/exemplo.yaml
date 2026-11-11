@@ -1,0 +1,7 @@
+# exemplo.yaml — configuração simples incorporada na documentação.
+app:
+  name: teste-mkdocks
+  version: "1.0.0"
+  logging:
+    level: info
+    format: json

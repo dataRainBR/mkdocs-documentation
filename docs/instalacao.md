@@ -1,0 +1,93 @@
+# Instalação
+
+## 1. Introdução: o que vamos instalar e por quê
+
+Antes de configurar ou escrever qualquer página de documentação, precisamos preparar o ambiente instalando as ferramentas que tornam tudo isso possível. Neste projeto, usamos quatro pacotes Python que trabalham juntos:
+
+- **`mkdocs`**: é o gerador de site estático. Ele lê arquivos Markdown (como este que você está lendo agora) e os transforma em um site HTML completo, com navegação, busca e layout prontos.
+- **`mkdocs-material`**: é o tema visual "Material for MkDocs". Sem ele, o MkDocs ainda funciona, mas usa um tema padrão bem simples. O Material adiciona um visual moderno, modo claro/escuro, ícones, busca aprimorada e diversas opções de personalização.
+- **`mkdocstrings`** (com o extra `python`): é o plugin que gera documentação **automaticamente** a partir dos *docstrings* do código-fonte. Em vez de copiar e colar manualmente a explicação de uma função no Markdown, o `mkdocstrings` lê o docstring diretamente do código Python e o renderiza como parte da página.
+
+Com esses três pacotes, já é possível ter um site de documentação completo, com tema bonito e documentação de código gerada automaticamente a partir do Python. Neste projeto também instalamos um quarto pacote, explicado a seguir.
+
+## 2. Pré-requisitos
+
+Antes de instalar os pacotes, confirme que seu ambiente atende aos seguintes requisitos:
+
+- **Python 3.12 ou superior** instalado na máquina. Você pode verificar a versão com:
+
+```bash
+python --version
+```
+
+- **`uv` instalado**. O `uv` é o gerenciador de pacotes e ambientes Python usado neste projeto (ele substitui o uso combinado de `pip` + `venv` por uma ferramenta única e mais rápida). Para verificar se já está instalado:
+
+```bash
+uv --version
+```
+
+  Se o comando não for reconhecido, siga as instruções de instalação do `uv` para o seu sistema operacional antes de continuar.
+
+## 3. Comando de instalação do projeto
+
+O projeto é gerenciado pelo `uv`, então a forma recomendada de instalar os pacotes é usando o comando `uv add`. Execute o comando abaixo na raiz do projeto:
+
+```bash
+uv add mkdocs mkdocs-material "mkdocstrings[python]" mkdocstrings-typescript
+```
+
+Vamos entender esse comando passo a passo:
+
+- `uv add` diz ao `uv` para adicionar um ou mais pacotes como dependências do projeto, registrando-os no `pyproject.toml` e instalando-os no ambiente virtual gerenciado pelo `uv`.
+- `mkdocs` e `mkdocs-material` são informados como nomes de pacote simples, sem nenhuma sintaxe especial.
+- `"mkdocstrings[python]"` está entre aspas e usa a sintaxe de **extra** (`[python]`). Isso é necessário porque:
+  - O pacote `mkdocstrings` é um núcleo genérico, que por si só não sabe documentar nenhuma linguagem específica. Ele precisa de um *handler* (manipulador) para cada linguagem que ele deve suportar.
+  - O extra `[python]` instala automaticamente o handler Python do `mkdocstrings` (o pacote `mkdocstrings-python`) junto com o núcleo, habilitando a documentação de código Python a partir de docstrings.
+  - As aspas são necessárias porque os colchetes (`[` e `]`) têm significado especial em muitos shells (por exemplo, são usados para expansão de glob). Colocar o pacote entre aspas garante que o shell trate `mkdocstrings[python]` como um texto literal e o passe exatamente assim para o `uv`, em vez de tentar interpretá-lo.
+- `mkdocstrings-typescript` é instalado como um pacote separado, e não como um extra. Esse pacote adiciona um **handler para TypeScript** ao `mkdocstrings`, permitindo documentar código `.ts` da mesma forma que o handler Python documenta código `.py`. Ele é útil caso o projeto venha a incluir arquivos TypeScript no futuro: o mesmo mecanismo de diretivas do `mkdocstrings` poderá ser usado para gerar documentação a partir desse código, sem precisar de outra ferramenta.
+
+## 4. O que cada pacote faz
+
+Para deixar bem claro o papel de cada dependência, segue um resumo individual:
+
+### `mkdocs`
+
+É o motor principal. Lê os arquivos Markdown da pasta `docs/`, aplica a configuração do `mkdocs.yml` (navegação, tema, plugins, extensões) e gera o site estático em HTML/CSS/JS. É ele que fornece os comandos `mkdocs build` (gerar o site) e `mkdocs serve` (visualizar localmente com recarregamento automático).
+
+### `mkdocs-material`
+
+É um tema para o MkDocs, instalado como um pacote independente e ativado na chave `theme.name: material` do `mkdocs.yml`. Fornece a aparência visual do site (cores, tipografia, modo claro/escuro), componentes de interface (como blocos de admonição e abas) e recursos de navegação (busca, índice lateral, botão de topo).
+
+### `mkdocstrings[python]`
+
+É o plugin que conecta o MkDocs ao código-fonte Python. Quando uma página Markdown contém uma diretiva como `::: teste.calcular_media`, o `mkdocstrings` (através do handler Python instalado pelo extra `[python]`) importa o módulo indicado, localiza a função ou classe, lê seu docstring e gera a seção de documentação diretamente no HTML final, formatando parâmetros, tipos de retorno e exceções.
+
+### `mkdocstrings-typescript`
+
+É o handler adicional que ensina o `mkdocstrings` a entender código TypeScript. Ele segue a mesma ideia do handler Python, mas analisa arquivos `.ts`/`.tsx` em vez de `.py`. Mesmo que o projeto ainda não tenha código TypeScript, instalar esse handler desde já deixa a configuração do `mkdocstrings` pronta (seção `plugins.mkdocstrings.handlers.typescript` no `mkdocs.yml`) para o caso de o projeto crescer e passar a incluir esse tipo de arquivo.
+
+## 5. Alternativa: instalação com `pip`
+
+Se você não estiver usando `uv` (por exemplo, em um ambiente que só tem `pip` disponível), é possível instalar os mesmos quatro pacotes com:
+
+```bash
+pip install mkdocs mkdocs-material "mkdocstrings[python]" mkdocstrings-typescript
+```
+
+O significado de cada parte do comando é o mesmo explicado na seção 3: o extra `[python]` instala o handler Python do `mkdocstrings`, e as aspas evitam que o shell interprete os colchetes como caracteres especiais. A única diferença é que o `pip` instala os pacotes no ambiente Python ativo no momento (por exemplo, um `venv` ativado manualmente), em vez de gerenciar o ambiente e o `pyproject.toml` automaticamente como o `uv` faz.
+
+## 6. Verificando a instalação
+
+Depois de instalar os pacotes, confirme que tudo funcionou corretamente verificando a versão do MkDocs:
+
+```bash
+uv run mkdocs --version
+```
+
+Se você instalou com `pip`, o comando equivalente é:
+
+```bash
+mkdocs --version
+```
+
+Em ambos os casos, o comando deve exibir o número da versão instalada do `mkdocs` (por exemplo, `mkdocs, version 1.6.1 from ...`), sem nenhuma mensagem de erro. Se o comando falhar com "comando não encontrado", revise se o ambiente virtual correto está ativo (ou use `uv run`, que já ativa o ambiente do projeto automaticamente) e repita a instalação da seção 3.

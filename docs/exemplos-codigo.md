@@ -1,0 +1,135 @@
+# Exemplos de código
+
+Esta página mostra duas formas diferentes de exibir exemplos de código na documentação: um **bloco de código estático**, que é apenas texto formatado dentro da página, e a **documentação gerada automaticamente** pelo plugin `mkdocstrings` a partir do código-fonte real do projeto. Os dois exemplos a seguir usam a mesma função, `calcular_media`, definida no arquivo `teste.py` na raiz do projeto.
+
+```python
+def calcular_media(valores: list[float]) -> float:
+    """
+    Calcula a média de uma lista de valores.
+
+    Args:
+        valores: Lista de valores numéricos.
+
+    Returns:
+        Média aritmética dos valores.
+
+    Raises:
+        ValueError: Se a lista estiver vazia.
+    """
+    if not valores:
+        raise ValueError("A lista não pode estar vazia.")
+
+    return sum(valores) / len(valores)
+```
+
+## Bloco de código estático
+
+O trecho de Python mostrado acima é um **bloco de código estático**: um texto fixo, delimitado por crases (` ``` `) com a linguagem `python` indicada logo após as crases de abertura. Essa é a forma mais simples de exibir um exemplo de código em uma página MkDocs — você simplesmente copia e cola o conteúdo do arquivo-fonte (neste caso, `teste.py`) diretamente dentro do Markdown da página.
+
+Não há nenhuma "mágica" por trás desse bloco: o MkDocs não lê `teste.py` para gerá-lo, não executa nada e não sabe que essa função realmente existe no projeto. O texto que aparece é exatamente o texto que foi digitado (ou colado) no arquivo `exemplos-codigo.md`. A única coisa que o MkDocs faz é aplicar o destaque de sintaxe (*syntax highlighting*) do Python ao conteúdo, graças às extensões `pymdownx.highlight` e `pymdownx.superfences` configuradas no `mkdocs.yml` — mas o texto em si é escrito manualmente por quem edita a página.
+
+## Documentação via mkdocstrings
+
+Agora, em vez de colar o código novamente, vamos deixar o plugin `mkdocstrings` gerar a documentação da mesma função automaticamente a partir do código-fonte. A sintaxe usada para isso é a seguinte:
+
+```markdown
+::: teste.calcular_media
+```
+
+Essa linha é chamada de **diretiva** do `mkdocstrings`. Ela não é um bloco de código: é uma instrução especial, reconhecida pelo plugin durante a geração do site, escrita diretamente no corpo da página Markdown (sem as crases de bloco de código). Abaixo, a mesma diretiva é inserida de verdade na página, para que o `mkdocstrings` a processe e renderize o resultado:
+
+::: teste.calcular_media
+
+Passo a passo do que acontece quando o comando `mkdocs build` (ou `mkdocs serve`) processa essa diretiva:
+
+1. **Leitura da página**: o MkDocs lê o arquivo `exemplos-codigo.md` e encontra a linha `::: teste.calcular_media`, que é reconhecida pelo plugin `mkdocstrings` (configurado na seção `plugins` do `mkdocs.yml`) como uma diretiva válida, e não como texto comum.
+2. **Interpretação do identificador**: o `mkdocstrings` interpreta o texto após `:::` — `teste.calcular_media` — como um caminho no formato `módulo.função`. Isso indica ao handler Python do plugin que ele deve procurar um módulo chamado `teste` e, dentro dele, um objeto chamado `calcular_media`.
+3. **Importação do módulo**: o handler Python importa o módulo `teste` (ou seja, executa `import teste` internamente), usando a lista `paths: [.]` configurada em `plugins.mkdocstrings.handlers.python` no `mkdocs.yml` para saber que deve procurar esse módulo a partir da raiz do projeto, onde o arquivo `teste.py` realmente está.
+4. **Inspeção da função**: com o módulo importado, o `mkdocstrings` inspeciona o objeto `calcular_media` em tempo real — obtém sua assinatura (nome do parâmetro `valores`, anotação de tipo `list[float]`, tipo de retorno `float`) e lê a docstring completa da função, exatamente como ela está escrita em `teste.py` naquele momento.
+5. **Geração do HTML**: a partir dessas informações (assinatura + docstring), o plugin gera automaticamente o HTML da documentação da função — incluindo um cabeçalho com o nome e a assinatura, e seções formatadas para `Args`, `Returns` e `Raises`, de acordo com o estilo de docstring configurado (`docstring_style: google`) — e insere esse HTML no lugar onde a diretiva estava escrita.
+
+Em resumo: nada do conteúdo visível acima (assinatura, parâmetros, descrição, seções `Args`/`Returns`/`Raises`) foi digitado manualmente nesta página — tudo foi extraído e formatado automaticamente a partir do código real de `teste.py` no momento do build.
+
+## Bloco estático vs. mkdocstrings — qual usar?
+
+A diferença fundamental entre as duas formas mostradas nesta página está em **de onde vem o conteúdo** e **quando ele é atualizado**:
+
+- **Bloco de código estático**: o conteúdo é um texto fixo, digitado ou colado manualmente dentro do arquivo `exemplos-codigo.md`. Ele representa uma "fotografia" do código no momento em que foi copiado. Se, no futuro, alguém alterar a função `calcular_media` em `teste.py` — por exemplo, mudando um parâmetro, a lógica interna ou a docstring — o bloco estático **não muda automaticamente**. Ele continuará mostrando a versão antiga do código até que alguém edite manualmente a página e cole o trecho atualizado. Ou seja, esse bloco pode ficar **desatualizado (dessincronizado)** em relação ao código real, e a responsabilidade de mantê-lo sincronizado é inteiramente de quem edita a documentação.
+- **Diretiva do mkdocstrings** (`::: teste.calcular_media`): o conteúdo **não é armazenado** na página — apenas a referência `teste.calcular_media` é armazenada. Todo o restante (assinatura, parâmetros, docstring) é **gerado dinamicamente a cada execução de `mkdocs build` ou `mkdocs serve`**, lendo o código-fonte de `teste.py` naquele exato momento. Isso significa que, se a função `calcular_media` for alterada, a próxima vez que o site for reconstruído, a documentação exibida mudará automaticamente, sem que ninguém precise editar `exemplos-codigo.md`. Por isso essa forma **nunca fica desatualizada** em relação ao código real.
+
+**Recomendação prática:**
+
+- Use um **bloco de código estático** quando quiser mostrar um trecho de código ilustrativo, hipotético, simplificado ou que não corresponde a uma função real do projeto — por exemplo, um exemplo didático genérico que não precisa (e não deve) ser acoplado a um arquivo específico do código-fonte.
+- Use a **diretiva do mkdocstrings** sempre que quiser documentar uma função, classe ou módulo que realmente existe no projeto. Isso evita duplicação de esforço (não é preciso copiar e colar código na documentação) e garante que a documentação do projeto esteja sempre fiel ao comportamento real do código, mesmo depois de várias alterações futuras em `teste.py`.
+
+## Exemplo em TypeScript
+
+As duas seções acima compararam um bloco de código estático com a documentação gerada automaticamente pelo `mkdocstrings`, usando a função Python `calcular_media`. A mesma comparação é repetida agora para um exemplo equivalente em TypeScript, a função `calcularMedia`, definida em `src/calcular-media/src/index.ts`. A diferença é que, para TypeScript, o `mkdocstrings` usa o handler `typescript`, que por sua vez depende do **TypeDoc** para extrair a documentação do código-fonte.
+
+### Bloco de código estático
+
+Assim como no exemplo em Python, o trecho abaixo é uma cópia fixa do conteúdo de `src/calcular-media/src/index.ts`, colada diretamente nesta página:
+
+```typescript
+/**
+ * Calcula a média de uma lista de valores.
+ *
+ * @param valores - Lista de valores numéricos.
+ * @returns Média aritmética dos valores.
+ * @throws {Error} Se a lista estiver vazia.
+ */
+export function calcularMedia(valores: number[]): number {
+  if (valores.length === 0) {
+    throw new Error("A lista não pode estar vazia.");
+  }
+
+  return valores.reduce((soma, valor) => soma + valor, 0) / valores.length;
+}
+```
+
+### Pré-requisito: instalar e buildar o toolchain do TypeDoc
+
+Diferente do handler Python do `mkdocstrings`, que lê o código-fonte `.py` diretamente, o handler `typescript` não lê o arquivo `.ts` original. Ele depende do **TypeDoc**, uma ferramenta Node.js que por sua vez lê os arquivos de declaração de tipos (`.d.ts`) gerados pelo compilador TypeScript (`tsc`). Por isso, antes que a diretiva do mkdocstrings mostrada na próxima seção funcione, é preciso instalar e executar esse toolchain:
+
+```bash
+npm install --save-dev typescript typedoc
+```
+
+O comando acima instala o compilador TypeScript (`tsc`) e o TypeDoc como dependências de desenvolvimento Node.js do projeto.
+
+```bash
+npx tsc -p src/calcular-media/tsconfig.json
+```
+
+O comando acima compila `src/calcular-media/src/index.ts` usando as configurações de `src/calcular-media/tsconfig.json`, gerando o arquivo de declaração `src/calcular-media/src/index.d.ts`. É esse arquivo `.d.ts` — e não o `index.ts` original — que o TypeDoc (e, por extensão, o handler `typescript` do `mkdocstrings`) realmente lê para extrair as assinaturas, parâmetros e comentários JSDoc usados na documentação gerada.
+
+### Documentação via mkdocstrings
+
+A sintaxe da diretiva para o exemplo em TypeScript é a seguinte:
+
+```markdown
+::: calcular-media
+    handler: typescript
+```
+
+O identificador `calcular-media` não é um caminho de arquivo, como aconteceu no exemplo Python (`teste.calcular_media`, no formato `módulo.função`). Aqui, `calcular-media` é o valor do campo `name` definido em `src/calcular-media/package.json` — ou seja, o handler `typescript` identifica o pacote pelo nome declarado em seu `package.json`, não pelo caminho até a função dentro dele.
+
+A linha `handler: typescript` também é necessária por um motivo específico deste projeto: o handler padrão (`default_handler`) configurado no `mkdocs.yml` é o `python`, já que não há nenhuma opção `default_handler: typescript` definida. Sem indicar `handler: typescript` explicitamente nesta diretiva, o `mkdocstrings` tentaria interpretar `calcular-media` usando o handler Python, o que falharia.
+
+A diretiva de verdade é inserida abaixo, para que seja processada pelo `mkdocstrings` quando o toolchain do TypeDoc estiver disponível:
+
+::: calcular-media
+    handler: typescript
+
+### Bloco estático vs. mkdocstrings (TypeScript)
+
+A mesma diferença explicada para o exemplo em Python se aplica aqui: o bloco de código estático acima é uma cópia fixa de `index.ts`, que pode ficar desatualizada se a função `calcularMedia` for alterada e ninguém lembrar de atualizar esta página manualmente. Já a diretiva `::: calcular-media` gera sua documentação dinamicamente a cada build, lendo o arquivo `.d.ts` mais recente.
+
+Há, porém, uma diferença prática importante em relação ao exemplo Python: a diretiva `::: teste.calcular_media` funciona direto a partir do arquivo `.py`, sem nenhum passo de build prévio — o handler Python importa o módulo e já tem acesso à função e à sua docstring. A diretiva `::: calcular-media`, por outro lado, só funciona depois de um passo de build explícito: é preciso rodar `tsc` para gerar o `index.d.ts` antes de cada build da documentação (ou sempre que `index.ts` for alterado), já que o handler `typescript` lê o `.d.ts` gerado, não o `.ts` original.
+
+!!! warning "Toolchain do TypeDoc não disponível neste ambiente"
+    No ambiente onde esta documentação foi originalmente escrita e buildada, Node.js e npm **não estavam instalados**. Por isso, os comandos `npm install` e `npx tsc` descritos na seção "Pré-requisito" acima não puderam ser executados, e o arquivo `src/calcular-media/src/index.d.ts` não foi gerado.
+
+    Isso não é uma falha isolada desta seção: foi confirmado empiricamente, rodando `uv run mkdocs build --strict`, que o `mkdocs build` falha por completo nessas condições. Ao tentar processar a diretiva `::: calcular-media`, o handler `typescript` chama o binário `typedoc` via subprocess, e como o Node.js/TypeDoc não está instalado, isso lança um `FileNotFoundError` não tratado que aborta o build inteiro antes de qualquer página HTML ser escrita em `site/`. Ou seja, enquanto a diretiva `::: calcular-media` estiver presente e o TypeDoc não estiver disponível, **nenhuma página do site é gerada** — não apenas a desta página de exemplos de código.
+
+    Para ver a documentação do TypeScript renderizada de verdade, e o build voltar a funcionar normalmente, instale o Node.js, execute os dois comandos (`npm install --save-dev typescript typedoc` e `npx tsc -p src/calcular-media/tsconfig.json`) e rode novamente `uv run mkdocs build`.

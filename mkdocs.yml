@@ -1,0 +1,124 @@
+
+site_name: "Teste MkDocs"
+site_description: "Tutorial de MkDocs: instalação, configuração e personalização"
+docs_dir: docs
+
+hooks:
+  - hooks/redirects.py
+
+repo_url: https://github.com/dataRainBR/mkdocs-documentation
+repo_name: dataRainBR/mkdocs-documentation
+edit_uri: edit/main/docs/
+
+nav:
+  - Início: index.md
+  - Instalação: instalacao.md
+  - "Configuração do mkdocs.yml": configuracao-yaml.md
+  - Personalização: personalizacao.md
+  - "Exemplos de código": exemplos-codigo.md
+  - "Exemplos do notebook": exemplos-notebook.md
+  - "Preview com Playwright": playwright-preview.md
+  - "Dockerfile e outras linguagens": dockerfile-outras-linguagens.md
+  - "Imagens e recursos visuais": imagens-recursos-visuais.md
+  - "Diagramas e arquitetura": diagramas-arquitetura.md
+  - "Integração com GitHub": integracao-github.md
+  - "Extensões pymdownx": extensoes-pymdownx.md
+  - "Outros plugins": outros-plugins.md
+
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  font:
+    text: Roboto
+    code: Roboto Mono
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: "Mudar para modo escuro"
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: "Mudar para modo claro"
+  features:
+    - content.action.edit
+    - content.action.view
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]              # resolve `teste` a partir da raiz do projeto
+          options:
+            show_source: true
+            show_root_heading: true
+            docstring_style: google
+        typescript: {}
+  - glightbox
+  - git-revision-date-localized:
+      fallback_to_build_date: true
+      enable_creation_date: true
+      enable_git_follow: false
+      type: timeago
+  - awesome-pages
+  - macros:
+      module_name: macros_mkdocs
+  - minify:
+      minify_html: true
+  - exporter:
+      formats:
+        pdf:
+          enabled: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.snippets:
+      base_path: .
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.blocks.caption
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+  - abbr
+  - def_list
+  - footnotes
+  - tables
+  - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.critic
+  - pymdownx.magiclink
+  - pymdownx.smartsymbols
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

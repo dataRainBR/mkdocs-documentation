@@ -1,0 +1,7 @@
+{
+  "name": "calcular-media",
+  "version": "1.0.0",
+  "description": "Exemplo em TypeScript equivalente a calcular_media (teste.py), usado para demonstrar o handler typescript do mkdocstrings.",
+  "types": "src/index.d.ts",
+  "private": true
+}
