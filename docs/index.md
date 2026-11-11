@@ -7,6 +7,7 @@ Ao longo das próximas páginas você vai aprender a:
 - **Instalar os pacotes necessários** (`mkdocs`, `mkdocs-material`, `mkdocstrings[python]` e `mkdocstrings-typescript`) usando `uv`.
 - **Configurar o arquivo `mkdocs.yml`**, entendendo para que servem as seções `nav`, `theme`, `plugins` e `markdown_extensions`.
 - **Personalizar o visual do site**, ajustando fontes, paleta de cores, logo e favicon do tema Material.
+- **Integrar com GitHub**, usando o GitHub CLI (`gh`) para autenticar, trabalhar com repositórios e pull requests e acompanhar o GitHub Actions.
 - **Gerar documentação a partir de código-fonte** usando o plugin `mkdocstrings`, comparando um bloco de código estático com a documentação extraída automaticamente da docstring de uma função Python real do projeto.
 - **Seguir um roteiro prático completo**, equivalente ao notebook `mkdocks.ipynb`, cobrindo desde a instalação dos pacotes até a visualização do site no navegador.
 
@@ -31,3 +32,5 @@ Agora que você já sabe o que é o MkDocs e por que ele é útil, siga as pági
 3. [Personalização](personalizacao.md)
 4. [Exemplos de código](exemplos-codigo.md)
 5. [Exemplos do notebook](exemplos-notebook.md)
+6. [Integração com GitHub](integracao-github.md)
+7. [GitHub CLI (`gh`)](github-cli.md)

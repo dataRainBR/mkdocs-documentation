@@ -22,6 +22,7 @@ nav:
   - "Imagens e recursos visuais": imagens-recursos-visuais.md
   - "Diagramas e arquitetura": diagramas-arquitetura.md
   - "Integração com GitHub": integracao-github.md
+  - "GitHub CLI (gh)": github-cli.md
   - "Extensões pymdownx": extensoes-pymdownx.md
   - "Outros plugins": outros-plugins.md
 

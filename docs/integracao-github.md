@@ -211,5 +211,67 @@ No repositório `dataRainBR/mkdocs-documentation`, acesse **Settings → Pages �
 
 Sem essa configuração manual, o GitHub Pages não tem como aceitar o artefato publicado por `actions/deploy-pages`, mesmo que o workflow esteja configurado corretamente: a opção padrão ("Deploy from a branch") espera que o conteúdo do site seja enviado por commit a uma branch específica, não por um artefato de build.
 
+### 5.6 Acessar a documentação publicada
+
+Depois de selecionar **GitHub Actions** como fonte do Pages, envie as alterações para a branch `main`. O evento `push` configurado em `.github/workflows/docs.yml` inicia automaticamente o workflow de build e publicação:
+
+```bash
+git add .
+git commit -m "docs: atualiza documentação"
+git push origin main
+```
+
+Antes de enviar, confira `git status` e revise as alterações para garantir que apenas os arquivos desejados serão publicados. Se o primeiro push ocorreu **antes** de configurar o Pages, a alteração da fonte, por si só, não inicia uma nova execução: faça um novo push para `main` ou dispare o workflow manualmente, conforme descrito abaixo.
+
+#### Pela interface do GitHub
+
+1. Abra o repositório no GitHub e selecione a aba **Actions**.
+2. Na lista de workflows, escolha **Build e publica a documentação**.
+3. Abra a execução mais recente da branch `main`. Verifique se os jobs `build` e `deploy` terminaram com sucesso (indicados como concluídos).
+4. Quando a publicação terminar, abra **Settings → Pages**. Na seção do GitHub Pages, use o endereço do site exibido para acessar a documentação.
+5. Se o endereço ainda não aparecer, confirme em **Settings → Pages → Build and deployment** se a fonte está como **GitHub Actions**, e confira os detalhes e logs da execução na aba **Actions**.
+
+Também é possível abrir a execução e acompanhar o job `deploy`; o ambiente `github-pages` pode exibir o endereço publicado como link da implantação.
+
+#### Pelo terminal com `gh`
+
+Autentique-se no repositório e confira as execuções recentes:
+
+```bash
+gh auth status
+gh workflow list
+gh run list --workflow docs.yml --branch main
+```
+
+Copie o ID da execução mais recente e acompanhe até concluir:
+
+```bash
+gh run watch ID-DA-EXECUCAO
+gh run view ID-DA-EXECUCAO
+```
+
+Para abrir os detalhes da execução no navegador:
+
+```bash
+gh run view ID-DA-EXECUCAO --web
+```
+
+Depois de uma execução bem-sucedida, consulte pelo `gh` o endereço configurado no GitHub Pages:
+
+```bash
+gh api repos/dataRainBR/mkdocs-documentation/pages --jq .html_url
+```
+
+O comando imprime a URL do site; abra-a no navegador. Se a consulta retornar erro ou ainda não houver URL, confirme a configuração em **Settings → Pages** e verifique se o job `deploy` concluiu com sucesso.
+
+Se precisar iniciar uma execução sem fazer um novo push, o workflow também pode ser iniciado manualmente porque declara `workflow_dispatch`:
+
+```bash
+gh workflow run docs.yml --ref main
+gh run list --workflow docs.yml --branch main
+```
+
+O primeiro comando agenda a execução; o segundo permite localizar o ID para acompanhá-la com `gh run watch`. A publicação só estará disponível quando o build e o deploy terminarem com sucesso.
+
 !!! note
     Adicionar um remote git ao repositório local, com `git remote add origin https://github.com/dataRainBR/mkdocs-documentation.git`, é uma ação segura e reversível: ela apenas registra, no `.git/config` local, um endereço de referência, sem enviar nenhum dado ao repositório remoto por si só. Já o commit e o push do código para esse repositório real — a etapa que de fato dispara o workflow descrito nesta seção e torna o site publicável — é uma decisão que depende de você revisar e confirmar o conteúdo a ser publicado, e deve ser executada separadamente, por fora da geração automática desta documentação.
