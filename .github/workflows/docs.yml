@@ -28,11 +28,8 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Instalar TypeScript e TypeDoc
-        run: npm install --global typescript typedoc
-
-      - name: Gerar as declarações TypeScript (.d.ts)
-        run: tsc -p src/calcular-media/tsconfig.json
+      - name: Instalar TypeDoc
+        run: npm install --global typedoc
 
       - name: Instalar o uv
         uses: astral-sh/setup-uv@v3

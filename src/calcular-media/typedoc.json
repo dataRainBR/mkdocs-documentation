@@ -1,6 +1,6 @@
 {
   "extends": ["../../typedoc.base.json"],
   "entryPointStrategy": "expand",
-  "entryPoints": ["src/index.d.ts"],
+  "entryPoints": ["src/index.ts"],
   "tsconfig": "tsconfig.json"
 }

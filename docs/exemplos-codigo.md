@@ -87,21 +87,15 @@ export function calcularMedia(valores: number[]): number {
 }
 ```
 
-### Pré-requisito: instalar e buildar o toolchain do TypeDoc
+### Pré-requisito: instalar o TypeDoc
 
-Diferente do handler Python do `mkdocstrings`, que lê o código-fonte `.py` diretamente, o handler `typescript` não lê o arquivo `.ts` original. Ele depende do **TypeDoc**, uma ferramenta Node.js que por sua vez lê os arquivos de declaração de tipos (`.d.ts`) gerados pelo compilador TypeScript (`tsc`). Por isso, antes que a diretiva do mkdocstrings mostrada na próxima seção funcione, é preciso instalar e executar esse toolchain:
-
-```bash
-npm install --save-dev typescript typedoc
-```
-
-O comando acima instala o compilador TypeScript (`tsc`) e o TypeDoc como dependências de desenvolvimento Node.js do projeto.
+Diferente do handler Python do `mkdocstrings`, o handler `typescript` depende do **TypeDoc**, uma ferramenta Node.js que extrai a documentação dos arquivos TypeScript. Neste projeto, `src/calcular-media/typedoc.json` aponta diretamente para `src/index.ts`; não é necessário gerar um arquivo `.d.ts` antes do build.
 
 ```bash
-npx tsc -p src/calcular-media/tsconfig.json
+npm install --global typedoc
 ```
 
-O comando acima compila `src/calcular-media/src/index.ts` usando as configurações de `src/calcular-media/tsconfig.json`, gerando o arquivo de declaração `src/calcular-media/src/index.d.ts`. É esse arquivo `.d.ts` — e não o `index.ts` original — que o TypeDoc (e, por extensão, o handler `typescript` do `mkdocstrings`) realmente lê para extrair as assinaturas, parâmetros e comentários JSDoc usados na documentação gerada.
+O comando instala o TypeDoc globalmente para que o handler do `mkdocstrings` possa executá-lo. O Node.js e o npm também precisam estar instalados.
 
 ### Documentação via mkdocstrings
 
@@ -116,20 +110,18 @@ O identificador `calcular-media` não é um caminho de arquivo, como aconteceu n
 
 A linha `handler: typescript` também é necessária por um motivo específico deste projeto: o handler padrão (`default_handler`) configurado no `mkdocs.yml` é o `python`, já que não há nenhuma opção `default_handler: typescript` definida. Sem indicar `handler: typescript` explicitamente nesta diretiva, o `mkdocstrings` tentaria interpretar `calcular-media` usando o handler Python, o que falharia.
 
-A diretiva de verdade é inserida abaixo, para que seja processada pelo `mkdocstrings` quando o toolchain do TypeDoc estiver disponível:
+A diretiva de verdade é inserida abaixo, para que seja processada pelo `mkdocstrings` quando o TypeDoc estiver disponível:
 
 ::: calcular-media
     handler: typescript
 
 ### Bloco estático vs. mkdocstrings (TypeScript)
 
-A mesma diferença explicada para o exemplo em Python se aplica aqui: o bloco de código estático acima é uma cópia fixa de `index.ts`, que pode ficar desatualizada se a função `calcularMedia` for alterada e ninguém lembrar de atualizar esta página manualmente. Já a diretiva `::: calcular-media` gera sua documentação dinamicamente a cada build, lendo o arquivo `.d.ts` mais recente.
+A mesma diferença explicada para o exemplo em Python se aplica aqui: o bloco de código estático acima é uma cópia fixa de `index.ts`, que pode ficar desatualizada se a função `calcularMedia` for alterada e ninguém lembrar de atualizar esta página manualmente. Já a diretiva `::: calcular-media` gera sua documentação dinamicamente a cada build, usando o TypeDoc configurado para ler `src/index.ts`.
 
-Há, porém, uma diferença prática importante em relação ao exemplo Python: a diretiva `::: teste.calcular_media` funciona direto a partir do arquivo `.py`, sem nenhum passo de build prévio — o handler Python importa o módulo e já tem acesso à função e à sua docstring. A diretiva `::: calcular-media`, por outro lado, só funciona depois de um passo de build explícito: é preciso rodar `tsc` para gerar o `index.d.ts` antes de cada build da documentação (ou sempre que `index.ts` for alterado), já que o handler `typescript` lê o `.d.ts` gerado, não o `.ts` original.
+Há, porém, uma diferença prática importante em relação ao exemplo Python: a diretiva `::: teste.calcular_media` funciona a partir do arquivo `.py`, enquanto a diretiva `::: calcular-media` precisa do Node.js e do TypeDoc disponíveis no ambiente de build. Não é necessário executar `tsc` separadamente: o TypeDoc lê o arquivo-fonte `.ts` configurado no pacote.
 
 !!! warning "Toolchain do TypeDoc não disponível neste ambiente"
-    No ambiente onde esta documentação foi originalmente escrita e buildada, Node.js e npm **não estavam instalados**. Por isso, os comandos `npm install` e `npx tsc` descritos na seção "Pré-requisito" acima não puderam ser executados, e o arquivo `src/calcular-media/src/index.d.ts` não foi gerado.
+    Se Node.js, npm e TypeDoc não estiverem instalados, o handler `typescript` não consegue gerar a documentação e o build falha ao processar esta diretiva.
 
-    Isso não é uma falha isolada desta seção: foi confirmado empiricamente, rodando `uv run mkdocs build --strict`, que o `mkdocs build` falha por completo nessas condições. Ao tentar processar a diretiva `::: calcular-media`, o handler `typescript` chama o binário `typedoc` via subprocess, e como o Node.js/TypeDoc não está instalado, isso lança um `FileNotFoundError` não tratado que aborta o build inteiro antes de qualquer página HTML ser escrita em `site/`. Ou seja, enquanto a diretiva `::: calcular-media` estiver presente e o TypeDoc não estiver disponível, **nenhuma página do site é gerada** — não apenas a desta página de exemplos de código.
-
-    Para ver a documentação do TypeScript renderizada de verdade, e o build voltar a funcionar normalmente, instale o Node.js, execute os dois comandos (`npm install --save-dev typescript typedoc` e `npx tsc -p src/calcular-media/tsconfig.json`) e rode novamente `uv run mkdocs build`.
+    No GitHub Actions, o workflow instala o TypeDoc antes de executar `uv run mkdocs build --strict`. Em uma máquina local, instale Node.js e npm, execute `npm install --global typedoc` e depois rode o build do MkDocs.

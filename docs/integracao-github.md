@@ -127,11 +127,8 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Instalar TypeScript e TypeDoc
-        run: npm install --global typescript typedoc
-
-      - name: Gerar as declarações TypeScript (.d.ts)
-        run: tsc -p src/calcular-media/tsconfig.json
+      - name: Instalar TypeDoc
+        run: npm install --global typedoc
 
       - name: Instalar o uv
         uses: astral-sh/setup-uv@v3
@@ -168,17 +165,15 @@ O workflow dispara automaticamente a cada `push` na branch `main`, e também pod
 
 1. **Clonar o repositório** (`actions/checkout@v4` com `fetch-depth: 0`) — baixa o histórico completo de commits, em vez do padrão `fetch-depth: 1` (apenas o commit mais recente). Esse histórico completo é exatamente o que falta na Seção 4 quando o `git-revision-date-localized` cai no `fallback_to_build_date`: aqui, como o repositório real terá um histórico de commits de verdade (diferente da máquina local em que esta documentação foi escrita, que não tinha nenhum commit), o plugin consegue calcular as datas reais de última modificação e criação de cada página, sem recorrer ao fallback.
 
-2. **Configurar Node.js** (`actions/setup-node@v4`) **e instalar TypeScript/TypeDoc** (`npm install --global typescript typedoc`) — este é um ponto importante: o ambiente local onde esta spec foi desenvolvida não tem Node.js instalado, o que impedia de validar, de ponta a ponta, a diretiva `::: calcular-media` (handler `typescript` do `mkdocstrings`, usada na página [Exemplos de código](exemplos-codigo.md)). O runner do GitHub Actions, por outro lado, **já vem com Node.js disponível**, e esta etapa ainda instala globalmente os pacotes `typescript` e `typedoc`. Com isso, o ambiente de CI tem tudo que falta localmente para que o handler TypeScript funcione de verdade.
+2. **Configurar Node.js** (`actions/setup-node@v4`) **e instalar TypeDoc** (`npm install --global typedoc`) — a diretiva `::: calcular-media` (handler `typescript` do `mkdocstrings`, usada na página [Exemplos de código](exemplos-codigo.md)) depende do TypeDoc. O runner do GitHub Actions também precisa ter o Node.js disponível para executar essa ferramenta.
 
-3. **Gerar as declarações TypeScript** (`tsc -p src/calcular-media/tsconfig.json`) — compila o pacote `calcular-media` usando a configuração de `src/calcular-media/tsconfig.json`, produzindo o arquivo `src/calcular-media/src/index.d.ts`. É esse arquivo `.d.ts` que o handler `typescript` do `mkdocstrings` lê durante o build do MkDocs para montar a documentação da diretiva `::: calcular-media` — e ele precisa existir *antes* da etapa de build, o que é garantido pela ordem das etapas neste workflow.
+3. **Instalar o `uv`** (`astral-sh/setup-uv@v3`) **e instalar as dependências Python** (`uv sync`) — preparam o ambiente Python do projeto a partir do `pyproject.toml`/`uv.lock`, da mesma forma que um desenvolvedor faria localmente ao rodar `uv sync` na própria máquina.
 
-4. **Instalar o `uv`** (`astral-sh/setup-uv@v3`) **e instalar as dependências Python** (`uv sync`) — preparam o ambiente Python do projeto a partir do `pyproject.toml`/`uv.lock`, da mesma forma que um desenvolvedor faria localmente ao rodar `uv sync` na própria máquina.
+4. **Instalar o Chromium do Playwright** (`uv run playwright install --with-deps chromium`) — instala o navegador Chromium (e suas dependências de sistema) necessário para o plugin `exporter` do `mkdocs.yml`, que abre cada página renderizada em um navegador headless para gerar o PDF correspondente durante o build. Sem essa etapa, o build falharia ao tentar abrir um navegador que ainda não está instalado no runner.
 
-5. **Instalar o Chromium do Playwright** (`uv run playwright install --with-deps chromium`) — instala o navegador Chromium (e suas dependências de sistema) necessário para o plugin `exporter` do `mkdocs.yml`, que abre cada página renderizada em um navegador headless para gerar o PDF correspondente durante o build. Sem essa etapa, o build falharia ao tentar abrir um navegador que ainda não está instalado no runner.
+5. **Buildar a documentação** (`uv run mkdocs build --strict`) — gera o site estático completo na pasta `site/`. A flag `--strict` faz o build falhar (em vez de só avisar) caso exista qualquer referência quebrada, como um item de `nav` apontando para um arquivo inexistente — garantindo que um site incompleto nunca chegue a ser publicado.
 
-6. **Buildar a documentação** (`uv run mkdocs build --strict`) — gera o site estático completo na pasta `site/`. A flag `--strict` faz o build falhar (em vez de só avisar) caso exista qualquer referência quebrada, como um item de `nav` apontando para um arquivo inexistente — garantindo que um site incompleto nunca chegue a ser publicado.
-
-7. **Publicar artefato do GitHub Pages** (`actions/upload-pages-artifact@v3`, apontando para `site`) — empacota o conteúdo da pasta `site/`, já gerada pela etapa anterior, como um artefato de build do GitHub Actions, pronto para ser consumido pelo job `deploy` a seguir.
+6. **Publicar artefato do GitHub Pages** (`actions/upload-pages-artifact@v3`, apontando para `site`) — empacota o conteúdo da pasta `site/`, já gerada pela etapa anterior, como um artefato de build do GitHub Actions, pronto para ser consumido pelo job `deploy` a seguir.
 
 ### 5.3 O job `deploy`
 
