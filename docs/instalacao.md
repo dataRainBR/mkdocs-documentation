@@ -46,6 +46,37 @@ Vamos entender esse comando passo a passo:
   - As aspas são necessárias porque os colchetes (`[` e `]`) têm significado especial em muitos shells (por exemplo, são usados para expansão de glob). Colocar o pacote entre aspas garante que o shell trate `mkdocstrings[python]` como um texto literal e o passe exatamente assim para o `uv`, em vez de tentar interpretá-lo.
 - `mkdocstrings-typescript` é instalado como um pacote separado, e não como um extra. Esse pacote adiciona um **handler para TypeScript** ao `mkdocstrings`, permitindo documentar código `.ts` da mesma forma que o handler Python documenta código `.py`. Ele é útil caso o projeto venha a incluir arquivos TypeScript no futuro: o mesmo mecanismo de diretivas do `mkdocstrings` poderá ser usado para gerar documentação a partir desse código, sem precisar de outra ferramenta.
 
+### Instalar Node.js, npm e TypeDoc para documentação TypeScript
+
+O `uv add` e o `uv sync` instalam dependências Python; eles não instalam o Node.js, o npm ou o TypeDoc. Quando uma página usa o handler TypeScript do `mkdocstrings`, o build precisa executar o comando `typedoc`. Por isso, além dos pacotes Python, instale o Node.js (que inclui o npm) e o TypeDoc.
+
+1. Instale a versão LTS do [Node.js](https://nodejs.org/en/download/). O npm é instalado junto com ele.
+2. Feche e abra novamente o terminal e confirme que os comandos estão disponíveis:
+
+   ```powershell
+   node --version
+   npm --version
+   ```
+
+3. Se Node.js estiver instalado no local padrão do Windows, mas `node` ou `npm` não forem reconhecidos no PowerShell, adicione temporariamente os diretórios ao `PATH` da janela atual:
+
+   ```powershell
+   $env:Path = "C:\Program Files\nodejs;$env:APPDATA\npm;$env:Path"
+   node --version
+   npm --version
+   ```
+
+   Para manter a correção em novos terminais, abra **Editar as variáveis de ambiente do sistema** → **Variáveis de Ambiente** → `Path` (variáveis do usuário) e adicione `C:\Program Files\nodejs` e `%APPDATA%\npm`. Depois, abra um novo terminal. Se o Node.js estiver instalado em outro diretório, use o caminho real da instalação.
+
+4. Instale o TypeDoc globalmente pelo npm e confirme que o comando está disponível:
+
+   ```powershell
+   npm install --global typedoc
+   typedoc --version
+   ```
+
+Se `node` ou `npm` não forem reconhecidos, o terminal não está encontrando a instalação do Node.js no `PATH`. Se o build falhar com `FileNotFoundError: [WinError 2]`, confira também se o TypeDoc foi instalado globalmente e se `%APPDATA%\npm` está no `PATH`. Veja os passos detalhados na página [Exemplos de código](exemplos-codigo.md#pré-requisito-instalar-o-typedoc).
+
 ## 4. O que cada pacote faz
 
 Para deixar bem claro o papel de cada dependência, segue um resumo individual:
