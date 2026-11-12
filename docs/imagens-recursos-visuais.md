@@ -1,6 +1,6 @@
 # Imagens e recursos visuais
 
-Até aqui, as imagens mencionadas neste tutorial — como o logo e o favicon em [Identidade visual](personalizacao.md) — foram tratadas de forma bem simples: apenas um caminho de arquivo apontado por uma chave do `mkdocs.yml`. Mas o ecossistema do [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) oferece recursos específicos para enriquecer a forma como imagens aparecem dentro do **conteúdo** das páginas Markdown.
+Além de configurar o logo e o favicon do tema em [Identidade visual](personalizacao.md), também é possível inserir imagens diretamente no conteúdo das páginas Markdown. O [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) e seus plugins oferecem recursos para ampliar, dimensionar e legendar essas imagens.
 
 Esta página cobre três formas de enriquecer imagens no Documentation_Site:
 
@@ -35,20 +35,18 @@ O `glightbox` atua no momento do `mkdocs build`: ele percorre o HTML gerado de *
 
 O ponto mais importante é que **isso acontece automaticamente para qualquer imagem Markdown**, sem exigir nenhuma marcação especial por imagem. Não é necessário envolver a imagem em um link, adicionar uma classe CSS ou qualquer atributo extra: basta que a imagem exista como `![alt](caminho)` em qualquer página do site, e o `glightbox` já cuida do resto durante o build.
 
-!!! note "Logo e favicon DataRain"
-    A pasta `docs/assets/` já contém o logo e o favicon do site, descritos em [Identidade visual](personalizacao.md). Eles são recursos do tema; ainda não há nesta página uma imagem de conteúdo para demonstrar o lightbox.
+### Exemplo: ampliar uma imagem
 
-    O comportamento do `glightbox` pode ser descrito em prosa e através dos exemplos de sintaxe desta página. Assim que uma imagem de conteúdo for adicionada, o plugin aplicará o lightbox automaticamente.
+A imagem abaixo usa o arquivo DataRain `dataRain_Color-removebg-preview.png`, salvo em `docs/assets/`. Como ela está escrita com a sintaxe Markdown comum, o `glightbox` permite clicar nela para abrir a visualização ampliada:
 
-### Comportamento esperado com uma imagem real
+![Logotipo DataRain](assets/dataRain_Color-removebg-preview.png){: width="500" }
+/// caption
+Logo DataRain exibido como imagem de conteúdo. Clique na imagem para ampliá-la.
+///
 
-Suponha que, no futuro, um arquivo real seja salvo em `docs/assets/logo.png` e referenciado em uma página como:
+### Como o lightbox funciona nas demais imagens
 
-```markdown
-![Logo](assets/logo.png)
-```
-
-A partir do próximo `uv run mkdocs build` (ou recarregamento automático do `uv run mkdocs serve`), essa imagem passa a abrir em lightbox automaticamente ao ser clicada — sem nenhuma alteração adicional no Markdown e sem reconfigurar o plugin. O mesmo vale para qualquer outra imagem Markdown adicionada a qualquer página do tutorial, inclusive para as imagens de exemplo mencionadas apenas textualmente nas seções 2 e 3 abaixo.
+O mesmo comportamento se aplica automaticamente às demais imagens Markdown do site. Não é necessário envolver cada imagem em um link nem adicionar configurações especiais do `glightbox`.
 
 ## 2. Legendas e alinhamento com `attr_list` e `pymdownx.blocks.caption`
 
@@ -59,12 +57,12 @@ Duas extensões de Markdown já habilitadas neste projeto (ver `markdown_extensi
 A extensão `attr_list` permite anexar atributos HTML — como `width`, `height`, `align` ou classes CSS — a praticamente qualquer elemento Markdown, escrevendo-os entre chaves `{: ... }` imediatamente após o elemento. Aplicada a uma imagem, a sintaxe é:
 
 ```markdown
-![Diagrama de arquitetura](assets/logo.png){: width="300" align="right" }
+![Logotipo DataRain](assets/dataRain_Color-removebg-preview.png){: width="300" align="right" }
 ```
 
 Aqui:
 
-- `![Diagrama de arquitetura](assets/logo.png)` é a sintaxe Markdown comum de imagem: o texto entre `[` e `]` é o texto alternativo (`alt`), e o texto entre `(` e `)` é o caminho do arquivo.
+- `![Logotipo DataRain](assets/dataRain_Color-removebg-preview.png)` é a sintaxe Markdown comum de imagem: o texto entre `[` e `]` é o texto alternativo (`alt`), e o texto entre `(` e `)` é o caminho do arquivo.
 - `{: width="300" align="right" }` é o bloco de atributos do `attr_list`. Cada par `atributo="valor"` dentro das chaves é copiado para a tag `<img>` gerada. Neste exemplo, `width="300"` limita a largura da imagem a 300 pixels, e `align="right"` a alinha à direita do texto ao redor (fazendo o texto da página fluir ao lado dela, como em um documento tradicional).
 
 O mesmo bloco de atributos funciona para qualquer outro elemento Markdown (parágrafos, cabeçalhos, links), não apenas imagens — mas aqui o uso mais comum é justamente controlar dimensão e alinhamento de imagens sem escrever HTML manualmente.
@@ -74,9 +72,9 @@ O mesmo bloco de atributos funciona para qualquer outro elemento Markdown (pará
 A extensão `pymdownx.blocks.caption` adiciona uma legenda visível abaixo de uma imagem (ou de outro bloco), usando a sintaxe de blocos `///` do pymdown-extensions:
 
 ```markdown
-![Diagrama de arquitetura](assets/logo.png)
+![Logotipo DataRain](assets/dataRain_Color-removebg-preview.png)
 /// caption
-Figura 1 — Diagrama de arquitetura do projeto.
+Figura 1 — Logo DataRain inserido no conteúdo da página.
 ///
 ```
 
@@ -99,4 +97,4 @@ plugins:
 
 Quando habilitado, o `optimize` processa automaticamente, durante o `mkdocs build`, todas as imagens referenciadas dentro de `docs/`: ele comprime o arquivo original e pode gerar variantes otimizadas (por exemplo, em formato `.webp`), reduzindo o tamanho final dos arquivos de imagem servidos pelo Documentation_Site — sem que o autor do conteúdo precise rodar nenhuma ferramenta externa de compressão de imagens antes de salvar o arquivo em `docs/assets/`.
 
-Este projeto não habilita `optimize` no `mkdocs.yml` agora, porque — como explicado na seção 1 acima — ainda não há nenhuma imagem real em `docs/assets/` para otimizar. Fica registrado aqui como o próximo passo recomendado: assim que imagens reais (logo, favicon, diagramas, capturas de tela etc.) forem adicionadas ao projeto, basta acrescentar `optimize` à lista de `plugins` para que elas passem a ser comprimidas automaticamente a cada build, sem nenhum trabalho manual adicional.
+Este projeto não habilita `optimize` no `mkdocs.yml` atualmente. O recurso é opcional e deve ser ativado quando a otimização automática das imagens for necessária; para isso, acrescente `optimize` à lista de `plugins` e valide o resultado do build antes de publicar.
