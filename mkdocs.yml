@@ -14,6 +14,7 @@ nav:
   - Início: index.md
   - Começar:
       - Instalação: instalacao.md
+      - "Markdown e navegação": markdown-e-navegacao.md
       - Configuração: configuracao-yaml.md
       - "Identidade visual": personalizacao.md
   - Conteúdo:

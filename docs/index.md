@@ -28,9 +28,10 @@ Algumas razões para usar o MkDocs:
 Agora que você já sabe o que é o MkDocs e por que ele é útil, siga as páginas abaixo na ordem sugerida para colocar tudo em prática:
 
 1. [Instalação](instalacao.md)
-2. [Configuração do mkdocs.yml](configuracao-yaml.md)
-3. [Identidade visual](personalizacao.md)
-4. [Exemplos de código](exemplos-codigo.md)
-5. [Exemplos do notebook](exemplos-notebook.md)
-6. [Integração com GitHub](integracao-github.md)
-7. [GitHub CLI (`gh`)](github-cli.md)
+2. [Arquivos Markdown e navegação](markdown-e-navegacao.md)
+3. [Configuração do mkdocs.yml](configuracao-yaml.md)
+4. [Identidade visual](personalizacao.md)
+5. [Exemplos de código](exemplos-codigo.md)
+6. [Exemplos do notebook](exemplos-notebook.md)
+7. [Integração com GitHub](integracao-github.md)
+8. [GitHub CLI (`gh`)](github-cli.md)
