@@ -1,3 +1,7 @@
+---
+pdf: false
+---
+
 # Referências de pacotes Python
 
 Esta página é gerada automaticamente a partir das dependências do projeto.

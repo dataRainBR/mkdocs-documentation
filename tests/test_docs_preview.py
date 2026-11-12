@@ -28,6 +28,7 @@ my-package = { git = "https://github.com/example/my-package.git", rev = "abc123"
         self.assertIn("https://github.com/example/my-package/commit/abc123", generated)
         self.assertIn("::: docs_preview.generate_references_markdown", generated)
         self.assertIn("uv sync", generated)
+        self.assertIn("pdf: false", generated)
 
     def test_falls_back_to_requirements_file_and_keeps_direct_urls(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:

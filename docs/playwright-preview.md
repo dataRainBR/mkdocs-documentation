@@ -1,3 +1,7 @@
+---
+pdf: false
+---
+
 # Preview com Playwright
 
 ## 1. Introdução

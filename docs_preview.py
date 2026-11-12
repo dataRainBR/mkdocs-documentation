@@ -216,6 +216,10 @@ def generate_references_markdown(project_root: Path = PROJECT_ROOT) -> Path:
 
     content = "\n".join(
         [
+            "---",
+            "pdf: false",
+            "---",
+            "",
             "# Referências de pacotes Python",
             "",
             "Esta página é gerada automaticamente a partir das dependências do projeto.",
