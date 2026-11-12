@@ -34,7 +34,34 @@ uv sync
 
 `uv sync` lê todas as dependências de `pyproject.toml` e usa `uv.lock` para instalar as versões resolvidas, incluindo a revisão Git específica de `griffe-typedoc`. **Não é necessário adicionar os pacotes novamente** quando você está trabalhando neste repositório.
 
-O `uv sync` instala apenas dependências Python. A geração da API TypeScript também precisa do Node.js e do TypeDoc, instalados separadamente pelo workflow do GitHub Actions; o TypeDoc é um pacote JavaScript, não uma biblioteca Python. Consulte a [documentação do TypeDoc](https://typedoc.org/) e o [pacote no npm](https://www.npmjs.com/package/typedoc).
+O `uv sync` instala apenas dependências Python. A geração da API TypeScript também precisa do **Node.js**, que inclui o npm, e do **TypeDoc** — um pacote JavaScript, não uma biblioteca Python. Para configurar esse pré-requisito em uma máquina local:
+
+1. Instale a versão LTS do [Node.js](https://nodejs.org/en/download/); o npm é instalado junto.
+2. Abra um novo terminal e confirme que `node` e `npm` estão disponíveis:
+
+   ```bash
+   node --version
+   npm --version
+   ```
+
+3. Se Node.js estiver instalado no local padrão do Windows, mas `node`/`npm` não forem reconhecidos, ajuste o `PATH` desta janela do PowerShell:
+
+   ```powershell
+   $env:Path = "C:\Program Files\nodejs;$env:APPDATA\npm;$env:Path"
+   node --version
+   npm --version
+   ```
+
+   Para manter a correção, adicione `C:\Program Files\nodejs` e `%APPDATA%\npm` à variável `Path` do usuário no Windows e reabra o terminal. Se a instalação estiver em outro local, use o caminho real do Node.js.
+
+4. Instale o TypeDoc globalmente e confira se o comando está acessível:
+
+   ```bash
+   npm install --global typedoc
+   typedoc --version
+   ```
+
+O handler TypeScript do `mkdocstrings` executa `typedoc` diretamente. Se o build falhar com `FileNotFoundError: [WinError 2]`, confira se Node.js, npm e TypeDoc estão instalados e se os diretórios necessários estão no `PATH`. O workflow do GitHub Actions também instala Node.js e TypeDoc antes do build. Consulte a [documentação do TypeDoc](https://typedoc.org/) e o [pacote no npm](https://www.npmjs.com/package/typedoc).
 
 Para criar outro projeto e adicionar o mesmo conjunto de dependências, use `uv add` com as especificações abaixo:
 

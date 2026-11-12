@@ -91,11 +91,36 @@ export function calcularMedia(valores: number[]): number {
 
 Diferente do handler Python do `mkdocstrings`, o handler `typescript` depende do **TypeDoc**, uma ferramenta Node.js que extrai a documentação dos arquivos TypeScript. Neste projeto, `src/calcular-media/typedoc.json` aponta diretamente para `src/index.ts`; não é necessário gerar um arquivo `.d.ts` antes do build.
 
+Primeiro, instale a versão LTS do [Node.js](https://nodejs.org/en/download/). O instalador do Node.js também instala o **npm**, que será usado para instalar o TypeDoc. Depois da instalação, feche e abra novamente o terminal e confirme que os dois comandos estão disponíveis:
+
+```bash
+node --version
+npm --version
+```
+
+Se o Node.js já estiver instalado, mas os comandos não forem reconhecidos no PowerShell, inclua os diretórios padrão nesta janela do terminal:
+
+```powershell
+$env:Path = "C:\Program Files\nodejs;$env:APPDATA\npm;$env:Path"
+node --version
+npm --version
+```
+
+Para manter a correção em novos terminais, adicione `C:\Program Files\nodejs` e `%APPDATA%\npm` à variável `Path` do usuário em **Variáveis de Ambiente** do Windows e abra um novo terminal. Se o Node.js estiver instalado em outro local, use o diretório real da instalação.
+
+Em seguida, instale o TypeDoc globalmente:
+
 ```bash
 npm install --global typedoc
 ```
 
-O comando instala o TypeDoc globalmente para que o handler do `mkdocstrings` possa executá-lo. O Node.js e o npm também precisam estar instalados.
+O handler do `mkdocstrings` executa o comando `typedoc` diretamente. Confirme que ele está acessível no terminal antes de gerar a documentação:
+
+```bash
+typedoc --version
+```
+
+Se `typedoc` não for reconhecido, abra um novo terminal para atualizar o `PATH` ou confira se `%APPDATA%\npm` está incluído nele.
 
 ### Documentação via mkdocstrings
 
@@ -122,9 +147,9 @@ A mesma diferença explicada para o exemplo em Python se aplica aqui: o bloco de
 Há, porém, uma diferença prática importante em relação ao exemplo Python: a diretiva `::: teste.calcular_media` funciona a partir do arquivo `.py`, enquanto a diretiva `::: calcular-media` precisa do Node.js e do TypeDoc disponíveis no ambiente de build. Não é necessário executar `tsc` separadamente: o TypeDoc lê o arquivo-fonte `.ts` configurado no pacote.
 
 !!! warning "Toolchain do TypeDoc não disponível neste ambiente"
-    Se Node.js, npm e TypeDoc não estiverem instalados, o handler `typescript` não consegue gerar a documentação e o build falha ao processar esta diretiva.
+    Se Node.js, npm e TypeDoc não estiverem instalados — ou se o comando `typedoc` não estiver no `PATH` —, o handler `typescript` não consegue gerar a documentação e o build falha ao processar esta diretiva. No Windows, isso pode aparecer como `FileNotFoundError: [WinError 2]` ao tentar iniciar o processo `typedoc`.
 
-    No GitHub Actions, o workflow instala o TypeDoc antes de executar `uv run mkdocs build --strict`. Em uma máquina local, instale Node.js e npm, execute `npm install --global typedoc` e depois rode o build do MkDocs.
+    No GitHub Actions, o workflow instala Node.js e TypeDoc antes de executar `uv run mkdocs build --strict`. Em uma máquina local, siga os passos de instalação acima e depois rode `uv run mkdocs build --strict`.
 
 ### Diagnóstico: incompatibilidade do decoder do TypeDoc
 
