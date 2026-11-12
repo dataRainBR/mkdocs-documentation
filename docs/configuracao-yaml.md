@@ -24,6 +24,8 @@ nav:
       - "Docker e linguagens": dockerfile-outras-linguagens.md
       - Extensões: extensoes-pymdownx.md
       - Plugins: outros-plugins.md
+      - "Pacotes utilizados": pacotes-utilizados.md
+      - Referências: referencias.md
   - GitHub:
       - Integração: integracao-github.md
       - "CLI (`gh`)": github-cli.md

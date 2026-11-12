@@ -139,6 +139,9 @@ jobs:
       - name: Instalar o Chromium do Playwright
         run: uv run playwright install --with-deps chromium
 
+      - name: Gerar referências dos pacotes
+        run: uv run python docs_preview.py --generate-references
+
       - name: Buildar a documentação
         run: uv run mkdocs build --strict
 
@@ -171,9 +174,11 @@ O workflow dispara automaticamente a cada `push` na branch `main`, e também pod
 
 4. **Instalar o Chromium do Playwright** (`uv run playwright install --with-deps chromium`) — instala o navegador Chromium (e suas dependências de sistema) necessário para o plugin `exporter` do `mkdocs.yml`, que abre cada página renderizada em um navegador headless para gerar o PDF correspondente durante o build. Sem essa etapa, o build falharia ao tentar abrir um navegador que ainda não está instalado no runner.
 
-5. **Buildar a documentação** (`uv run mkdocs build --strict`) — gera o site estático completo na pasta `site/`. A flag `--strict` faz o build falhar (em vez de só avisar) caso exista qualquer referência quebrada, como um item de `nav` apontando para um arquivo inexistente — garantindo que um site incompleto nunca chegue a ser publicado.
+5. **Gerar referências dos pacotes** (`uv run python docs_preview.py --generate-references`) — cria ou atualiza `docs/referencias.md` a partir do `pyproject.toml` (ou de `requirements.txt` como alternativa), antes que o MkDocs transforme as páginas em HTML.
 
-6. **Publicar artefato do GitHub Pages** (`actions/upload-pages-artifact@v3`, apontando para `site`) — empacota o conteúdo da pasta `site/`, já gerada pela etapa anterior, como um artefato de build do GitHub Actions, pronto para ser consumido pelo job `deploy` a seguir.
+6. **Buildar a documentação** (`uv run mkdocs build --strict`) — gera o site estático completo na pasta `site/`, já incluindo a página de referências atualizada. A flag `--strict` faz o build falhar (em vez de só avisar) caso exista qualquer referência quebrada, como um item de `nav` apontando para um arquivo inexistente — garantindo que um site incompleto nunca chegue a ser publicado.
+
+7. **Publicar artefato do GitHub Pages** (`actions/upload-pages-artifact@v3`, apontando para `site`) — empacota o conteúdo da pasta `site/`, já gerada pela etapa anterior, como um artefato de build do GitHub Actions, pronto para ser consumido pelo job `deploy` a seguir.
 
 ### 5.3 O job `deploy`
 

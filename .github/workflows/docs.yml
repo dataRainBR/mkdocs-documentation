@@ -40,6 +40,9 @@ jobs:
       - name: Instalar o Chromium do Playwright
         run: uv run playwright install --with-deps chromium
 
+      - name: Gerar referências dos pacotes
+        run: uv run python docs_preview.py --generate-references
+
       - name: Buildar a documentação
         run: uv run mkdocs build --strict
 
