@@ -27,6 +27,10 @@ As quatro primeiras linhas da tabela já foram apresentadas em detalhe em págin
 
 As quatro seções seguintes cobrem as extensões restantes, cada uma com um exemplo real inserido nesta própria página.
 
+### Código inline colorido com `pymdownx.inlinehilite`
+
+Para destacar a sintaxe de um pequeno trecho de código dentro de uma frase, use `#!` seguido da linguagem dentro das crases. Por exemplo, `#!python print("Olá, mundo!")` renderiza o código Python com as mesmas cores de sintaxe dos blocos de código.
+
 ## 3. Abas com `pymdownx.tabbed`
 
 A extensão `pymdownx.tabbed` transforma uma sequência de blocos marcados com `=== "Título"` em abas clicáveis, todas visíveis na mesma área da página — o leitor alterna entre elas sem precisar rolar a página para comparar o conteúdo. Ela está configurada no `mkdocs.yml` com a opção `alternate_style: true`, que faz as abas usarem o estilo visual do tema Material (uma faixa de botões acima do conteúdo) em vez do estilo padrão da extensão.
@@ -109,10 +113,48 @@ Nesse parágrafo, `:rocket:` foi substituído pelo ícone de um foguete no momen
 
 Até aqui, boa parte das extensões desta página pertence ao namespace `pymdownx`. Mas nem todo recurso visual de "caixa" ou "âncora" vem desse namespace — vale esclarecer a origem de cada um antes de seguir para as próximas seções.
 
-**Caixas de nota/atenção**: existem duas variantes.
+### Caixas de nota e aviso com `admonition`
+
+A extensão nativa `admonition` cria caixas destacadas com `!!! tipo "Título"`. O tema Material escolhe automaticamente a cor e o ícone de acordo com o tipo; não é necessário inserir um emoji ou configurar o ícone manualmente. A sintaxe básica é:
+
+```markdown
+!!! note "Título da caixa"
+    Conteúdo da caixa, indentado com quatro espaços.
+```
+
+Exemplos renderizados:
+
+!!! note "Nota"
+    Use para registrar contexto ou uma informação complementar.
+
+!!! tip "Dica"
+    Use para sugerir uma boa prática ou um atalho.
+
+!!! warning "Atenção"
+    Use para destacar uma condição que pode causar um problema.
+
+!!! success "Concluído"
+    Use para indicar um resultado esperado ou uma etapa bem-sucedida.
+
+!!! danger "Erro crítico"
+    Use para alertar sobre uma ação destrutiva ou uma falha grave.
+
+O nome do tipo define o ícone e a aparência da caixa; o texto entre aspas define o título, que pode ser escrito em português. O conteúdo deve ficar indentado quatro espaços. Como `pymdownx.superfences` está habilitada, também é possível incluir blocos de código dentro da caixa:
+
+!!! info "Comando de exemplo"
+    ```bash
+    uv run mkdocs build
+    ```
+
+**Caixas recolhíveis**: existe uma variante expansível, habilitada por `pymdownx.details`.
 
 - `admonition` (extensão nativa do Python-Markdown, já usada em páginas anteriores deste tutorial) cria caixas de aviso **sempre visíveis**, com a sintaxe `!!! tipo "Título"` (três pontos de exclamação).
 - `pymdownx.details` (vista na seção 5 desta página) cria a mesma caixa visualmente, mas **colapsada por padrão**, com a sintaxe `??? tipo "Título"` (três pontos de interrogação) — o leitor só vê o título até clicar para expandir o conteúdo.
+
+Para iniciar a caixa recolhível já aberta, acrescente `+` ao marcador:
+
+???+ tip "Aberta por padrão"
+    O leitor pode recolher este conteúdo clicando no título.
 
 **Âncoras de referência**: também existem duas origens.
 
@@ -121,9 +163,9 @@ Até aqui, boa parte das extensões desta página pertence ao namespace `pymdown
 
 Das quatro extensões citadas nesta seção, apenas `pymdownx.details` pertence de fato ao namespace `pymdownx`. `admonition`, `toc` e `footnotes` são extensões nativas do Python-Markdown, reaproveitadas pelo tema Material — não é porque uma extensão produz uma caixa ou um ícone que ela necessariamente vem do pacote `pymdown-extensions`.
 
-## 8. Extensões de referência: `abbr`, `def_list`, `footnotes`, `tables`
+## 8. Extensões de referência: `abbr`, `def_list`, `footnotes`, `tables`, `md_in_html`
 
-Estas quatro extensões nativas do Python-Markdown cobrem necessidades comuns de documentação de referência: abreviações, listas de definição, notas de rodapé e tabelas.
+Estas extensões nativas do Python-Markdown cobrem necessidades comuns de documentação de referência: abreviações, listas de definição, notas de rodapé, tabelas e Markdown dentro de elementos HTML.
 
 ### `abbr`
 
@@ -160,6 +202,20 @@ A extensão `tables` interpreta a sintaxe de tabelas do Markdown (linhas separad
 |---|---|
 | `abbr` | nativa |
 | `pymdownx.mark` | `pymdownx` |
+
+### `md_in_html`
+
+A extensão `md_in_html` permite que o Markdown seja processado dentro de um elemento HTML, desde que o elemento tenha o atributo `markdown="1"`. Isso é útil quando a estrutura HTML é necessária, mas o conteúdo deve continuar usando formatação Markdown:
+
+```html
+<div markdown="1">
+
+Este parágrafo dentro de HTML contém **negrito** e `código inline`.
+
+</div>
+```
+
+Sem o atributo `markdown="1"`, o conteúdo dentro do elemento HTML pode ser tratado como HTML bruto, sem a conversão da sintaxe Markdown.
 
 ## 9. Extensões de formatação de texto: `mark`, `caret`, `tilde`, `keys`, `critic`, `magiclink`, `smartsymbols`
 
@@ -228,3 +284,5 @@ Fórmula em linha, no meio de uma frase: a famosa equação \(E = mc^2\) relacio
 
 !!! tip "Comece pequeno"
     Não habilite todas as extensões do pacote `pymdown-extensions` de uma vez só, mesmo que isso seja tecnicamente possível. Comece pelo conjunto essencial para documentação técnica — `pymdownx.highlight`, `pymdownx.superfences`, `pymdownx.snippets`, `pymdownx.tabbed`, `pymdownx.details` e `pymdownx.tasklist` — e adicione as demais (como as extensões de referência, as de formatação de texto e o Arithmatex, catalogadas nesta página) apenas quando a necessidade real aparecer no conteúdo sendo escrito. Isso mantém o `mkdocs.yml` organizado e evita acumular funcionalidades redundantes ou nunca utilizadas.
+
+Esta caixa também é um exemplo de `admonition`: `!!! tip "Título"` escolhe o tipo, e o tema Material adiciona o ícone correspondente. Veja a seção [Caixas de nota e aviso](#caixas-de-nota-e-aviso-com-admonition) para outros tipos e exemplos.

@@ -122,3 +122,64 @@ mkdocs --version
 ```
 
 Em ambos os casos, o comando deve exibir o número da versão instalada do `mkdocs` (por exemplo, `mkdocs, version 1.6.1 from ...`), sem nenhuma mensagem de erro. Se o comando falhar com "comando não encontrado", revise se o ambiente virtual correto está ativo (ou use `uv run`, que já ativa o ambiente do projeto automaticamente) e repita a instalação da seção 3.
+
+## 7. Diagnóstico de imagens e arquivos JavaScript que não carregam
+
+Se o navegador ou o exportador de PDF registrar `ERR_FILE_NOT_FOUND`, confira se o arquivo existe dentro de `docs/`. Os caminhos configurados em `theme.logo`, `theme.favicon`, `extra_css` e `extra_javascript` são relativos ao diretório de documentação, não à raiz do repositório.
+
+Por exemplo, estas configurações:
+
+```yaml
+theme:
+  logo: assets/logo.png
+  favicon: assets/favicon.svg
+
+extra_javascript:
+  - javascripts/mathjax.js
+```
+
+exigem que os arquivos estejam nestes locais:
+
+```text
+docs/
+├── assets/
+│   ├── logo.png
+│   └── favicon.svg
+└── javascripts/
+    └── mathjax.js
+```
+
+No PowerShell, confirme os arquivos antes de gerar o site:
+
+```powershell
+Test-Path .\docs\assets\logo.png
+Test-Path .\docs\assets\favicon.svg
+Test-Path .\docs\javascripts\mathjax.js
+```
+
+Se `extra_javascript` aponta para um arquivo que não existe, crie-o no caminho esperado ou remova a referência do `mkdocs.yml` se ela não for necessária. O MkDocs copia arquivos existentes de `docs/` para `site/`; não cria esses arquivos por causa da configuração.
+
+Confira também se a extensão corresponde ao formato real da imagem. Renomear um PNG para `.ico` não o converte em ícone ICO: use `.png` no arquivo e na configuração, ou converta-o para ICO de verdade. Isso evita que o servidor envie um tipo de conteúdo incompatível com os bytes da imagem.
+
+Em imagens inseridas no Markdown, use o caminho relativo ao arquivo dentro de `docs/`. Por exemplo, em `docs/index.md`, para exibir `docs/assets/Imagem13.jpg`, escreva:
+
+```markdown
+![Logotipo](assets/Imagem13.jpg){: width="300" align="right" }
+```
+
+Não use `/docs/assets/Imagem13.jpg`: `docs/` é o diretório-fonte do MkDocs e não faz parte da URL publicada. Um `/` inicial aponta para a raiz do domínio. Confirme tanto o arquivo-fonte quanto o arquivo copiado para o site:
+
+```powershell
+Test-Path .\docs\assets\Imagem13.jpg
+Test-Path .\site\assets\Imagem13.jpg
+```
+
+Depois de corrigir os caminhos, gere o site novamente e confirme que os recursos foram copiados:
+
+```powershell
+uv run mkdocs build --clean
+Test-Path .\site\assets\logo.png
+Test-Path .\site\javascripts\mathjax.js
+```
+
+Se os arquivos estiverem presentes mesmo assim, abra as ferramentas de desenvolvedor do navegador e confira a aba **Network**: ela mostra a URL requisitada e o status HTTP que falhou. Verifique também letras maiúsculas/minúsculas nos nomes; isso importa quando o site é publicado no Linux pelo GitHub Actions.
