@@ -113,3 +113,65 @@
 .md-typeset summary {
   font-weight: 700;
 }
+
+.md-typeset .image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1rem;
+  align-items: start;
+  margin: 1.5rem 0;
+}
+
+.md-typeset .image-grid figure {
+  min-width: 0;
+  margin: 0;
+}
+
+.md-typeset .image-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.md-typeset .image-grid figcaption {
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+.md-typeset img.image-center {
+  display: block;
+  float: none;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+}
+
+.md-typeset img.image-left,
+.md-typeset img.image-right {
+  max-width: 45%;
+  height: auto;
+}
+
+.md-typeset img.image-left {
+  float: left;
+  margin: 0 1rem 0.75rem 0;
+}
+
+.md-typeset img.image-right {
+  float: right;
+  margin: 0 0 0.75rem 1rem;
+}
+
+.md-typeset .image-clear {
+  clear: both;
+}
+
+@media screen and (max-width: 40em) {
+  .md-typeset img.image-left,
+  .md-typeset img.image-right {
+    display: block;
+    float: none;
+    max-width: 100%;
+    margin: 1rem auto;
+  }
+}
