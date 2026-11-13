@@ -31,6 +31,11 @@ As quatro seções seguintes cobrem as extensões restantes, cada uma com um exe
 
 Para destacar a sintaxe de um pequeno trecho de código dentro de uma frase, use `#!` seguido da linguagem dentro das crases. Por exemplo, `#!python print("Olá, mundo!")` renderiza o código Python com as mesmas cores de sintaxe dos blocos de código.
 
+??? info "Ver o Markdown usado"
+    ```markdown
+    Código Python em uma frase: `#!python print("Olá, mundo!")`
+    ```
+
 ## 3. Abas com `pymdownx.tabbed`
 
 A extensão `pymdownx.tabbed` transforma uma sequência de blocos marcados com `=== "Título"` em abas clicáveis, todas visíveis na mesma área da página — o leitor alterna entre elas sem precisar rolar a página para comparar o conteúdo. Ela está configurada no `mkdocs.yml` com a opção `alternate_style: true`, que faz as abas usarem o estilo visual do tema Material (uma faixa de botões acima do conteúdo) em vez do estilo padrão da extensão.
@@ -61,6 +66,27 @@ Abaixo, um exemplo real com três abas, mostrando a mesma instrução ("Hello Wo
     Write-Host "Hello World"
     ```
 
+??? info "Ver o Markdown usado"
+    ````markdown
+    === "Python"
+
+        ```python
+        print("Hello World")
+        ```
+
+    === "JavaScript"
+
+        ```javascript
+        console.log("Hello World");
+        ```
+
+    === "PowerShell"
+
+        ```powershell
+        Write-Host "Hello World"
+        ```
+    ````
+
 ## 4. Checklist com `pymdownx.tasklist`
 
 A extensão `pymdownx.tasklist` transforma itens de lista Markdown escritos como `- [x]` ou `- [ ]` em caixas de marcação **de verdade** — não apenas o texto literal `[x]`/`[ ]`, mas um elemento HTML renderizado visualmente como uma caixa de seleção. `[x]` marca o item como concluído (caixa marcada) e `[ ]` (um espaço entre os colchetes) marca o item como pendente (caixa vazia).
@@ -70,6 +96,13 @@ Exemplo real, representando um checklist de progresso deste próprio tutorial:
 - [x] Instalar o MkDocs e o tema Material
 - [x] Configurar o `mkdocs.yml`
 - [ ] Publicar o site no GitHub Pages
+
+??? info "Ver o Markdown usado"
+    ```markdown
+    - [x] Instalar o MkDocs e o tema Material
+    - [x] Configurar o `mkdocs.yml`
+    - [ ] Publicar o site no GitHub Pages
+    ```
 
 No `mkdocs.yml` deste projeto, `pymdownx.tasklist` está configurada com a opção `custom_checkbox: true`. Sem essa opção, a extensão renderizaria um `<input type="checkbox" disabled>` HTML comum — a caixa de marcação padrão do navegador, com a aparência do sistema operacional do leitor. Com `custom_checkbox: true`, o tema Material substitui essa caixa padrão pelos ícones customizados do próprio tema (um quadrado com marca de visto para itens concluídos, um quadrado vazio para pendentes), mantendo a aparência visual consistente com o restante do site, em vez de depender do estilo nativo de cada navegador/sistema operacional.
 
@@ -87,18 +120,25 @@ Exemplo real:
 ??? note "Clique para expandir"
     Este conteúdo começa escondido e só aparece quando o leitor clica no título.
 
+??? info "Ver o Markdown usado"
+    ```markdown
+    ??? note "Clique para expandir"
+        Este conteúdo começa escondido e só aparece quando o leitor clica no título.
+    ```
+
 Esse comportamento é útil para conteúdo complementar ou opcional — como um trecho de log de erro, uma explicação mais longa para quem quiser se aprofundar, ou uma seção "veja também" — que não precisa competir por atenção com o conteúdo principal da página, mas que continua disponível a um clique de distância.
 
 ## 6. Emoji com `pymdownx.emoji`
 
 A extensão `pymdownx.emoji` substitui códigos no formato `:nome-do-emoji:` pelo ícone correspondente, renderizado como imagem/SVG em vez de depender da fonte de emoji nativa do sistema operacional ou navegador do leitor. No `mkdocs.yml` deste projeto, ela está configurada com:
 
-```yaml
-markdown_extensions:
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-```
+??? info "Ver a configuração no mkdocs.yml"
+    ````yaml
+    markdown_extensions:
+      - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+    ````
 
 - `emoji_index` aponta para o índice de nomes de emoji do [Twemoji](https://twemoji.twitter.com/) (o conjunto de emojis de código aberto originalmente criado pelo Twitter, distribuído junto com o tema Material), que é a tabela usada para traduzir um nome como `rocket` para o emoji correspondente.
 - `emoji_generator` define que cada emoji encontrado é gerado como uma imagem SVG embutida na página, em vez de depender de uma fonte de emoji instalada no sistema do leitor — garantindo que o emoji tenha a mesma aparência em qualquer navegador ou sistema operacional.
@@ -106,6 +146,11 @@ markdown_extensions:
 Exemplo real:
 
 :rocket: Documentação publicada com sucesso!
+
+??? info "Ver o Markdown usado"
+    ```markdown
+    :rocket: Documentação publicada com sucesso!
+    ```
 
 Nesse parágrafo, `:rocket:` foi substituído pelo ícone de um foguete no momento em que esta página foi processada pelo `mkdocs build`/`mkdocs serve` — o texto `:rocket:` em si não aparece na versão final renderizada do site.
 
@@ -117,51 +162,181 @@ Até aqui, boa parte das extensões desta página pertence ao namespace `pymdown
 
 A extensão nativa `admonition` cria caixas destacadas com `!!! tipo "Título"`. O tema Material escolhe automaticamente a cor e o ícone de acordo com o tipo; não é necessário inserir um emoji ou configurar o ícone manualmente. A sintaxe básica é:
 
-```markdown
-!!! note "Título da caixa"
-    Conteúdo da caixa, indentado com quatro espaços.
-```
-
-Exemplos renderizados:
+Os tipos abaixo mostram as caixas visuais oferecidas pelo tema Material:
 
 !!! note "Nota"
     Use para registrar contexto ou uma informação complementar.
 
+!!! abstract "Resumo"
+    Use para resumir uma seção ou apresentar uma visão geral.
+
+!!! info "Informação"
+    Use para apresentar informação neutra ou uma tarefa pendente.
+
 !!! tip "Dica"
     Use para sugerir uma boa prática ou um atalho.
-
-!!! warning "Atenção"
-    Use para destacar uma condição que pode causar um problema.
 
 !!! success "Concluído"
     Use para indicar um resultado esperado ou uma etapa bem-sucedida.
 
-!!! danger "Erro crítico"
+!!! question "Pergunta"
+    Use para destacar uma pergunta frequente ou uma resposta.
+
+!!! warning "Atenção"
+    Use para destacar uma condição que pode causar um problema.
+
+!!! failure "Falha"
+    Use para descrever uma operação que não foi concluída.
+
+!!! danger "Perigo"
     Use para alertar sobre uma ação destrutiva ou uma falha grave.
 
-O nome do tipo define o ícone e a aparência da caixa; o texto entre aspas define o título, que pode ser escrito em português. O conteúdo deve ficar indentado quatro espaços. Como `pymdownx.superfences` está habilitada, também é possível incluir blocos de código dentro da caixa:
+!!! bug "Bug"
+    Use para documentar um defeito conhecido.
 
-!!! info "Comando de exemplo"
-    ```bash
-    uv run mkdocs build
-    ```
+!!! example "Exemplo"
+    Use para introduzir um exemplo ou caso de uso.
+
+!!! quote "Citação"
+    Use para destacar uma citação.
+
+Cada tipo seleciona um ícone e uma aparência. O texto entre aspas define o título, que pode ser escrito em português, e o conteúdo deve ficar indentado quatro espaços. Estes são os nomes dos tipos e seus aliases:
+
+| Tipo visual | Tipos alternativos |
+|---|---|
+| `note` | — |
+| `abstract` | `summary`, `tldr` |
+| `info` | `todo` |
+| `tip` | `hint`, `important` |
+| `success` | `check`, `done` |
+| `question` | `help`, `faq` |
+| `warning` | `caution`, `attention` |
+| `failure` | `fail`, `missing` |
+| `danger` | `error` |
+| `bug` | — |
+| `example` | — |
+| `quote` | — |
+
+Os nomes da coluna **Tipos alternativos** podem ser usados no lugar do tipo visual e geram a mesma caixa e o mesmo ícone. Por exemplo, `!!! summary "Resumo"` equivale a `!!! abstract "Resumo"`.
+
+O bloco abaixo mostra a escrita Markdown de cada caixa acima, inclusive como colocar um bloco de código dentro de uma admonition. As caixas recolhíveis (`???`) são demonstradas separadamente na seção de `pymdownx.details`.
+
+??? info "Ver o Markdown usado para todas as caixas"
+    ````markdown
+    !!! note "Nota"
+        Use para registrar contexto ou uma informação complementar.
+
+    !!! abstract "Resumo"
+        Use para resumir uma seção ou apresentar uma visão geral.
+
+    !!! info "Informação"
+        Use para apresentar informação neutra ou uma tarefa pendente.
+
+    !!! tip "Dica"
+        Use para sugerir uma boa prática ou um atalho.
+
+    !!! success "Concluído"
+        Use para indicar um resultado esperado ou uma etapa bem-sucedida.
+
+    !!! question "Pergunta"
+        Use para destacar uma pergunta frequente ou uma resposta.
+
+    !!! warning "Atenção"
+        Use para destacar uma condição que pode causar um problema.
+
+    !!! failure "Falha"
+        Use para descrever uma operação que não foi concluída.
+
+    !!! danger "Perigo"
+        Use para alertar sobre uma ação destrutiva ou uma falha grave.
+
+    !!! bug "Bug"
+        Use para documentar um defeito conhecido.
+
+    !!! example "Exemplo"
+        Use para introduzir um exemplo ou caso de uso.
+
+    !!! quote "Citação"
+        Use para destacar uma citação.
+
+    !!! info "Comando de exemplo"
+        ```bash
+        uv run mkdocs build
+        ```
+    ````
 
 **Caixas recolhíveis**: existe uma variante expansível, habilitada por `pymdownx.details`.
 
-- `admonition` (extensão nativa do Python-Markdown, já usada em páginas anteriores deste tutorial) cria caixas de aviso **sempre visíveis**, com a sintaxe `!!! tipo "Título"` (três pontos de exclamação).
-- `pymdownx.details` (vista na seção 5 desta página) cria a mesma caixa visualmente, mas **colapsada por padrão**, com a sintaxe `??? tipo "Título"` (três pontos de interrogação) — o leitor só vê o título até clicar para expandir o conteúdo.
+- `admonition` (extensão nativa do Python-Markdown) cria caixas sempre visíveis usando `!!! tipo "Título"`.
+- `pymdownx.details` cria caixas recolhíveis usando `??? tipo "Título"`; o leitor clica no título para expandir o conteúdo.
 
 Para iniciar a caixa recolhível já aberta, acrescente `+` ao marcador:
 
 ???+ tip "Aberta por padrão"
     O leitor pode recolher este conteúdo clicando no título.
 
-**Âncoras de referência**: também existem duas origens.
+??? info "Ver o Markdown usado para caixas recolhíveis"
+    ````markdown
+    ??? note "Começa recolhida"
+        O leitor clica no título para ver este conteúdo.
 
-- `toc`, configurada neste projeto com `permalink: true` desde a Tarefa 1.1, adiciona um link-âncora clicável ao lado de cada título de seção, permitindo copiar um link direto para aquele ponto da página.
-- `footnotes` (nova nesta seção, detalhada a seguir) adiciona notas de rodapé com uma âncora de ida-e-volta: um número sobrescrito no texto (`Texto[^1]`) que leva até a explicação no rodapé (`[^1]: Explicação`), e uma seta no próprio rodapé que leva de volta ao ponto de origem no texto.
+    ???+ tip "Aberta por padrão"
+        O leitor pode recolher este conteúdo clicando no título.
+    ````
 
-Das quatro extensões citadas nesta seção, apenas `pymdownx.details` pertence de fato ao namespace `pymdownx`. `admonition`, `toc` e `footnotes` são extensões nativas do Python-Markdown, reaproveitadas pelo tema Material — não é porque uma extensão produz uma caixa ou um ícone que ela necessariamente vem do pacote `pymdown-extensions`.
+### Âncoras de seção com `toc`
+
+A extensão `toc` gera IDs a partir dos títulos e, com `permalink: true`, mostra um ícone de link ao lado deles. Clique nesse ícone para copiar o endereço direto da seção. Também é possível criar um link para o título manualmente usando seu fragmento, como `#exemplo-de-ancora`.
+
+O conteúdo-fonte necessário é o título em Markdown e a opção no `mkdocs.yml`:
+
+#### Exemplo de âncora
+
+[Ir para o exemplo](#exemplo-de-ancora)
+
+??? info "Ver o Markdown e a configuração da âncora"
+    ```markdown
+    ## Exemplo de âncora
+
+    <!-- Link para esse título dentro da mesma página -->
+    [Ir para o exemplo](#exemplo-de-ancora)
+    ```
+
+??? info "Ver a configuração do permalink no mkdocs.yml"
+    ```yaml
+    markdown_extensions:
+      - toc:
+          permalink: true
+    ```
+
+Neste exemplo, o MkDocs cria o ID `exemplo-de-ancora` a partir do título; o ícone de permalink é gerado automaticamente.
+
+### Notas de rodapé com `footnotes`
+
+A extensão `footnotes` cria uma referência numerada no texto e a explicação correspondente no fim da página. O número leva à nota; a seta na nota leva de volta à frase original:
+
+Este parágrafo contém uma nota de rodapé.[^ancora-exemplo]
+
+??? info "Ver o Markdown usado para a nota de rodapé"
+    ```markdown
+    Este parágrafo contém uma nota de rodapé.[^ancora-exemplo]
+
+    [^ancora-exemplo]: Esta é a explicação apresentada no rodapé.
+    ```
+
+[^ancora-exemplo]: Esta é a explicação apresentada no rodapé.
+
+Para usar as âncoras do sumário ou as notas de rodapé, habilite as extensões no arquivo `mkdocs.yml`:
+
+??? info "Ver a configuração do sumário e das notas de rodapé"
+    ````yaml
+    markdown_extensions:
+      - toc:
+          permalink: true
+      - footnotes
+    ````
+
+`admonition`, `toc` e `footnotes` são extensões nativas do Python-Markdown; `pymdownx.details` vem do pacote `pymdown-extensions`. O fato de uma extensão produzir uma caixa ou um ícone não determina de qual pacote ela vem.
 
 ## 8. Extensões de referência: `abbr`, `def_list`, `footnotes`, `tables`, `md_in_html`
 
@@ -172,6 +347,14 @@ Estas extensões nativas do Python-Markdown cobrem necessidades comuns de docume
 A extensão `abbr` permite definir uma abreviação uma única vez (em qualquer ponto do documento, geralmente ao final) e faz com que toda ocorrência dessa sigla no texto da página ganhe um tooltip explicativo ao passar o mouse por cima, sem precisar marcar cada ocorrência manualmente.
 
 Este site usa HTML e CSS para estruturar e estilizar o conteúdo.
+
+??? info "Ver o Markdown usado para abreviações"
+    ```markdown
+    Este site usa HTML e CSS para estruturar e estilizar o conteúdo.
+
+    *[HTML]: HyperText Markup Language
+    *[CSS]: Cascading Style Sheets
+    ```
 
 *[HTML]: HyperText Markup Language
 *[CSS]: Cascading Style Sheets
@@ -186,11 +369,27 @@ MkDocs
 Material
 :   Tema visual para o MkDocs.
 
+??? info "Ver o Markdown usado para a lista de definições"
+    ```markdown
+    MkDocs
+    :   Gerador de site estático a partir de arquivos Markdown.
+
+    Material
+    :   Tema visual para o MkDocs.
+    ```
+
 ### `footnotes`
 
 A extensão `footnotes` cria notas de rodapé com âncora de ida-e-volta: a marcação `[^1]` no meio do texto gera um número de referência sobrescrito e clicável, que leva até a explicação correspondente no final da página; e a explicação, por sua vez, traz uma seta que leva de volta ao ponto exato do texto onde a nota foi referenciada.
 
 O MkDocs é escrito em Python[^1].
+
+??? info "Ver o Markdown usado para a nota de rodapé"
+    ```markdown
+    O MkDocs é escrito em Python[^1].
+
+    [^1]: Uma linguagem de programação de alto nível.
+    ```
 
 [^1]: Uma linguagem de programação de alto nível.
 
@@ -203,17 +402,33 @@ A extensão `tables` interpreta a sintaxe de tabelas do Markdown (linhas separad
 | `abbr` | nativa |
 | `pymdownx.mark` | `pymdownx` |
 
+??? info "Ver o Markdown usado para a tabela"
+    ````markdown
+    | Extensão | Namespace |
+    |---|---|
+    | `abbr` | nativa |
+    | `pymdownx.mark` | `pymdownx` |
+    ````
+
 ### `md_in_html`
 
 A extensão `md_in_html` permite que o Markdown seja processado dentro de um elemento HTML, desde que o elemento tenha o atributo `markdown="1"`. Isso é útil quando a estrutura HTML é necessária, mas o conteúdo deve continuar usando formatação Markdown:
 
-```html
+Resultado renderizado:
+
 <div markdown="1">
 
 Este parágrafo dentro de HTML contém **negrito** e `código inline`.
-
 </div>
-```
+
+??? info "Ver o Markdown usado dentro do HTML"
+    ````markdown
+    <div markdown="1">
+
+    Este parágrafo dentro de HTML contém **negrito** e `código inline`.
+
+    </div>
+    ````
 
 Sem o atributo `markdown="1"`, o conteúdo dentro do elemento HTML pode ser tratado como HTML bruto, sem a conversão da sintaxe Markdown.
 
@@ -227,13 +442,30 @@ Marca um trecho como destacado (equivalente ao elemento HTML `<mark>`), com a si
 
 Este é um ==texto destacado==.
 
+??? info "Ver o Markdown usado"
+    ```markdown
+    Este é um ==texto destacado==.
+    ```
+
 ### `pymdownx.caret`
 
 A sintaxe `texto^sobrescrito^` cria um sobrescrito, útil para fórmulas como potências: H^2^O. A sintaxe `^^texto^^` (com os dois acentos circunflexos duplicados) cria sublinhado: ^^sublinhado^^.
 
+??? info "Ver o Markdown usado"
+    ```markdown
+    A água é H^2^O.
+    Este texto está ^^sublinhado^^.
+    ```
+
 ### `pymdownx.tilde`
 
 A sintaxe `~~texto~~` cria texto tachado: ~~texto tachado~~. A sintaxe `texto~subscrito~` cria subscrito, útil para fórmulas químicas: H~2~O.
+
+??? info "Ver o Markdown usado"
+    ```markdown
+    Este texto está ~~tachado~~.
+    A fórmula da água é H~2~O.
+    ```
 
 ### `pymdownx.keys`
 
@@ -241,11 +473,21 @@ A sintaxe `++tecla1+tecla2++` renderiza uma combinação de teclas como teclas d
 
 Pressione ++ctrl+shift+p++ para abrir a paleta de comandos.
 
+??? info "Ver o Markdown usado"
+    ```markdown
+    Pressione ++ctrl+shift+p++ para abrir a paleta de comandos.
+    ```
+
 ### `pymdownx.critic`
 
 Marca revisões de texto no estilo "controle de alterações": `{--texto removido--}` mostra o trecho removido (com um traço sobre o texto) e `{++texto adicionado++}` mostra o trecho inserido (sublinhado), ambos visíveis simultaneamente para fins de revisão:
 
 O MkDocs {--era--}{++é++} fácil de usar.
+
+??? info "Ver o Markdown usado"
+    ```markdown
+    O MkDocs {--era--}{++é++} fácil de usar.
+    ```
 
 ### `pymdownx.magiclink`
 
@@ -253,9 +495,19 @@ Converte automaticamente qualquer URL solta no texto em um link clicável, sem a
 
 Veja mais em https://www.mkdocs.org.
 
+??? info "Ver o Markdown usado"
+    ```markdown
+    Veja mais em https://www.mkdocs.org.
+    ```
+
 ### `pymdownx.smartsymbols`
 
 Converte sequências específicas de caracteres digitados em símbolos tipográficos equivalentes. Por exemplo, `-->` é convertido em → e `(c)` é convertido em ©, como neste parágrafo de exemplo: o fluxo segue de A --> B, e o conteúdo é (c) deste projeto.
+
+??? info "Ver o Markdown usado"
+    ```markdown
+    O fluxo segue de A --> B, e o conteúdo é (c) deste projeto.
+    ```
 
 ## 10. Numeração e destaque de linhas de código
 
@@ -268,6 +520,16 @@ df = pd.read_csv("dados.csv")
 print(df.head())
 ```
 
+??? info "Ver o Markdown usado com numeração e destaque"
+    ````markdown
+    ```python linenums="1" hl_lines="2 4"
+    import pandas as pd
+
+    df = pd.read_csv("dados.csv")
+    print(df.head())
+    ```
+    ````
+
 `linenums="1"` numera as linhas do bloco a partir de 1, exibindo a numeração à esquerda do código. `hl_lines="2 4"` destaca visualmente (com um fundo diferenciado) as linhas 2 e 4 do bloco — nesse exemplo, a linha da leitura do CSV e a linha do `print`.
 
 ## 11. Fórmulas matemáticas com Arithmatex
@@ -279,6 +541,15 @@ Fórmula em bloco:
 \[ \text{média} = \frac{\sum valores}{n} \]
 
 Fórmula em linha, no meio de uma frase: a famosa equação \(E = mc^2\) relaciona massa e energia.
+
+??? info "Ver o Markdown usado para as fórmulas"
+    ````markdown
+    Fórmula em bloco:
+
+    \[ \text{média} = \frac{\sum valores}{n} \]
+
+    Fórmula em linha: \(E = mc^2\).
+    ````
 
 ## 12. Quantas extensões habilitar?
 
