@@ -46,6 +46,20 @@ jobs:
       - name: Buildar a documentação
         run: uv run mkdocs build --strict
 
+      - name: Gerar PDF completo para download
+        run: >-
+          uv run python examples/expotr_to_pdf.py
+          --site-dir site
+          --output site/assets/documentacao-local.pdf
+
+      - name: Disponibilizar PDF nos artefatos da Action
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentacao-completa-pdf
+          path: site/assets/documentacao-local.pdf
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Publicar artefato do GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:

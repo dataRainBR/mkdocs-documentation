@@ -25,6 +25,8 @@ nav:
   - Ferramentas:
       - uv: uv.md
       - "Draw.io com drawpyo": drawpyo.md
+      - "Exportação para PDF": exportacao-para-pdf.md
+      - "Conversão PDF local": conversao-pdf-local.md
       - Taskipy: taskipy.md
       - Ruff: ruff.md
       - pytest: pytest.md

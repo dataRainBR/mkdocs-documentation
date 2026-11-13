@@ -1288,6 +1288,8 @@ dependencies = [
     { name = "mkdocstrings-typescript" },
     { name = "playwright" },
     { name = "pymdown-extensions" },
+    { name = "pypdf" },
+    { name = "pyyaml" },
 ]
 
 [package.metadata]
@@ -1305,6 +1307,8 @@ requires-dist = [
     { name = "mkdocstrings-typescript", specifier = ">=0.1.1" },
     { name = "playwright", specifier = ">=1.65.0" },
     { name = "pymdown-extensions", specifier = ">=13.0" },
+    { name = "pypdf", specifier = ">=7.0.1" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
 ]
 
 [[package]]

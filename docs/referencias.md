@@ -22,6 +22,8 @@ Para atualizar a lista manualmente, execute `uv run docs_preview.py --generate-r
 | `mkdocstrings[python]` | `>=1.0.8` | [Abrir referência](https://pypi.org/project/mkdocstrings/) |
 | `playwright` | `>=1.65.0` | [Abrir referência](https://pypi.org/project/playwright/) |
 | `pymdown-extensions` | `>=13.0` | [Abrir referência](https://pypi.org/project/pymdown-extensions/) |
+| `pypdf` | `>=7.0.1` | [Abrir referência](https://pypi.org/project/pypdf/) |
+| `pyyaml` | `>=6.0.3` | [Abrir referência](https://pypi.org/project/pyyaml/) |
 
 ## Instalar os pacotes
 
