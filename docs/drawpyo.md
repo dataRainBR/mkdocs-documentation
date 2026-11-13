@@ -14,10 +14,10 @@ Crie um projeto Python e instale `drawpyo`:
 ```powershell
 uv init diagramas-cloud
 cd diagramas-cloud
-uv add "drawpyo>=0.2.6"
+uv add "drawpyo @ git+https://github.com/MerrimanInd/drawpyo.git@0.2.6"
 ```
 
-A versão 0.2.6 ou posterior é necessária para carregar bibliotecas `mxlibrary` externas. Consulte a [versão mais recente e o histórico de releases](https://github.com/MerrimanInd/drawpyo/releases) se o `uv` resolver uma versão antiga.
+A versão 0.2.6 ou posterior é necessária para carregar bibliotecas `mxlibrary` externas. Se essa versão já estiver disponível no PyPI, também é possível instalá-la com `uv add "drawpyo>=0.2.6"`; consulte as [releases](https://github.com/MerrimanInd/drawpyo/releases) para verificar a versão atual.
 
 Crie uma pasta para scripts e outra para os arquivos gerados:
 
@@ -251,6 +251,118 @@ uv run python scripts/diagrama_aws.py
 
 Se o Draw.io não renderizar um SVG, valide que o arquivo é um SVG independente e bem formado. Prefira os SVGs oficiais, sem scripts ou referências externas. Os dados Base64 aumentam o tamanho do arquivo; incorpore somente os ícones usados.
 
+### 4.3 Gerar o fluxo usando as imagens do projeto
+
+Este passo a passo monta o fluxo solicitado:
+
+```text
+user.png -> imagem1.png -> Api_gateway.png -> lambda.png -> s3.png
+```
+
+#### 4.3.1 Organizar as imagens e o script
+
+Salve os cinco PNGs dentro de `docs/assets/`. Os nomes devem corresponder exatamente aos usados pelo script:
+
+| Etapa | Arquivo de entrada |
+|---|---|
+| Usuário | `docs/assets/user.png` |
+| Imagem enviada | `docs/assets/imagem1.png` |
+| API Gateway | `docs/assets/Api_gateway.png` |
+| Lambda | `docs/assets/lambda.png` |
+| S3 | `docs/assets/s3.png` |
+
+O diretório `docs/assets/diagrams/` receberá o diagrama gerado. O script cria esse diretório automaticamente; para criá-lo manualmente no PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force docs\assets\diagrams
+```
+
+Salve o script em `examples/diagrama_fluxo_imagens.py`, na raiz do repositório. A estrutura relevante fica assim:
+
+```text
+repositorio/
+├── examples/
+│   └── diagrama_fluxo_imagens.py
+└── docs/
+    └── assets/
+        ├── user.png
+        ├── imagem1.png
+        ├── Api_gateway.png
+        ├── lambda.png
+        ├── s3.png
+        └── diagrams/
+            └── fluxo-imagens.drawio  (gerado pelo script)
+```
+
+O código resolve os caminhos a partir da localização do próprio script, portanto pode ser executado de outras pastas sem alterar os caminhos dos PNGs. Ele incorpora os bytes de cada imagem no `.drawio` em Base64, acrescenta uma legenda e cria uma seta para cada ligação:
+
+```python
+--8<-- "examples/diagrama_fluxo_imagens.py"
+```
+
+#### 4.3.2 Configurar a dependência do `uv`
+
+As dependências do projeto ficam em `pyproject.toml`; o `uv.lock` registra as versões resolvidas. Não é necessário criar nem editar um `uv.toml` para adicionar `drawpyo`: ele é um arquivo de configuração do `uv`, não o manifesto de dependências. As configurações equivalentes também podem ficar na seção `[tool.uv]` do `pyproject.toml`. Consulte a documentação oficial do [`uv` sobre dependências](https://docs.astral.sh/uv/concepts/projects/dependencies/) e sobre [arquivos de configuração](https://docs.astral.sh/uv/concepts/configuration-files/).
+
+Para manter `drawpyo` como dependência do repositório, execute na raiz:
+
+```powershell
+uv add "drawpyo @ git+https://github.com/MerrimanInd/drawpyo.git@0.2.6"
+```
+
+O comando atualiza `pyproject.toml` e `uv.lock`. Como a biblioteca vem de uma release do GitHub, o `uv` registra o nome da dependência em `[project].dependencies` e sua origem em `[tool.uv.sources]`:
+
+```toml
+[project]
+dependencies = [
+    # Preserve as demais dependências já existentes no projeto.
+    "drawpyo",
+]
+
+[tool.uv.sources]
+drawpyo = { git = "https://github.com/MerrimanInd/drawpyo.git", rev = "0.2.6" }
+```
+
+Não substitua as dependências nem outras configurações já existentes pelo exemplo; acrescente a dependência e a origem Git indicadas. A referência `rev = "0.2.6"` fixa a release que disponibiliza o suporte a bibliotecas `mxlibrary` descrito neste tutorial. Se não quiser adicionar a biblioteca ao projeto, use a execução temporária abaixo; ela não altera `pyproject.toml` nem `uv.lock`.
+
+```powershell
+uv run --no-project --with "drawpyo @ git+https://github.com/MerrimanInd/drawpyo.git@0.2.6" python examples/diagrama_fluxo_imagens.py
+```
+
+Se adicionou a dependência ao projeto, execute-o assim:
+
+```powershell
+uv run python examples/diagrama_fluxo_imagens.py
+```
+
+#### 4.3.3 Conferir e publicar o resultado
+
+Ao terminar, o terminal informa o caminho do arquivo criado:
+
+```text
+docs/assets/diagrams/fluxo-imagens.drawio
+```
+
+O diagrama contém cinco imagens, cinco legendas e quatro conexões direcionais. Abra `docs/assets/diagrams/fluxo-imagens.drawio` no Draw.io para conferir ou ajustar o layout. Como os PNGs estão incorporados no arquivo, o diagrama continua abrindo mesmo se os arquivos de entrada forem movidos.
+
+Para publicar uma versão estática na documentação, abra o `.drawio` no Draw.io e exporte como SVG para `docs/assets/diagrams/fluxo-imagens.svg`. Então, inclua a imagem na página:
+
+```markdown
+![Fluxo do usuário até o armazenamento S3](assets/diagrams/fluxo-imagens.svg)
+```
+
+O arquivo `.drawio` também pode ser compartilhado como fonte editável:
+
+```markdown
+[Baixar o diagrama editável](assets/diagrams/fluxo-imagens.drawio)
+```
+
+#### 4.3.4 O que foi adicionado ao repositório
+
+Para reproduzir o exemplo em outra cópia do repositório, mantenha os cinco PNGs nos caminhos listados e o script em `examples/diagrama_fluxo_imagens.py`. Instale `drawpyo` como dependência do projeto conforme o passo anterior ou use o comando temporário com `uv run --no-project`. O `.drawio` é gerado pelo script e pode ser mantido no repositório como fonte editável.
+
+Neste exemplo, foram adicionados o script e o diagrama gerado, e a documentação desta seção foi atualizada. Os PNGs de entrada já estão em `docs/assets/`. A execução temporária usada para gerar o exemplo não alterou `pyproject.toml` nem `uv.lock`; use `uv add` se quiser registrar a dependência permanentemente. A página `drawpyo.md` já está na navegação do `mkdocs.yml` e o diretório `docs/assets/` já é publicado pelo MkDocs, portanto não é preciso alterar a navegação nem a configuração do MkDocs. Inclua os cinco PNGs, o script e o `.drawio` no controle de versão para que outros usuários recebam todos os arquivos ao clonar o repositório.
+
 ## 5. Exportar para XML, SVG ou HTML
 
 O arquivo `.drawio` gerado pelo `drawpyo` é a fonte editável do diagrama. Para criar formatos de publicação, instale o aplicativo desktop do Draw.io e use sua interface em **File → Export as** ou a linha de comando.
@@ -333,7 +445,7 @@ Para documentação pública, o SVG estático é mais simples e não depende de 
 
 ## 7. Resumo do fluxo de trabalho
 
-1. Instale `drawpyo` 0.2.6 ou posterior.
+1. Instale `drawpyo` 0.2.6 ou posterior para usar bibliotecas `mxlibrary` externas.
 2. Crie `File`, `Page`, objetos e conexões em Python.
 3. Use `register_mxlibrary` para bibliotecas Draw.io como `developer.xml`.
 4. Baixe SVGs AWS oficiais e incorpore-os como `image` se precisar criar diagramas AWS pelo código.
