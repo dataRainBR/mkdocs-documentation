@@ -24,6 +24,7 @@ nav:
       - Diagramas: diagramas-arquitetura.md
   - Ferramentas:
       - uv: uv.md
+      - "Draw.io com drawpyo": drawpyo.md
       - Taskipy: taskipy.md
       - Ruff: ruff.md
       - pytest: pytest.md
