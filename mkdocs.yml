@@ -23,6 +23,8 @@ nav:
       - Imagens: imagens-recursos-visuais.md
       - Diagramas: diagramas-arquitetura.md
   - Ferramentas:
+      - uv: uv.md
+      - Playwright: playwright.md
       - Preview: playwright-preview.md
       - "Docker e linguagens": dockerfile-outras-linguagens.md
       - Extensões: extensoes-pymdownx.md

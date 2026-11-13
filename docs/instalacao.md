@@ -20,7 +20,7 @@ Antes de instalar os pacotes, confirme que seu ambiente atende aos seguintes req
 python --version
 ```
 
-- **`uv` instalado**. O `uv` é o gerenciador de pacotes e ambientes Python usado neste projeto (ele substitui o uso combinado de `pip` + `venv` por uma ferramenta única e mais rápida). Para verificar se já está instalado:
+- **`uv` instalado**. O `uv` é o gerenciador de pacotes e ambientes Python usado neste projeto (ele substitui o uso combinado de `pip` + `venv` por uma ferramenta única e mais rápida). O tutorial passo a passo está em [uv: gerenciar projetos e dependências Python](uv.md). Para verificar se já está instalado:
 
 ```bash
 uv --version

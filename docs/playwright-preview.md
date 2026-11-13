@@ -10,6 +10,8 @@ O arquivo `docs_preview.py`, na raiz do projeto, é um script auxiliar que autom
 
 O `docs_preview.py` atualiza a página `docs/referencias.md` a partir das dependências declaradas, builda a documentação, inicia um servidor HTTP local servindo a pasta `site/` e abre a página inicial em uma janela real do navegador Chromium, já maximizada, esperando apenas que você aperte Enter no terminal quando quiser fechar tudo. É um script pensado para quem quer apenas *ver o resultado*, sem se preocupar com os comandos individuais de build e servidor.
 
+Para conhecer outras funções do Playwright — interações com páginas, capturas de tela, downloads e geração de PDFs — consulte o capítulo [Playwright](playwright.md).
+
 ## 2. Instalação do Playwright
 
 Antes de rodar o script, é preciso instalar duas coisas em sequência: o pacote Python do Playwright e o navegador que ele controla. São etapas diferentes, e as duas são obrigatórias.
