@@ -2,7 +2,7 @@
 
 Esta página ensina a converter toda a documentação HTML já gerada pelo MkDocs em um PDF único, mantendo a ordem da navegação, o estilo claro, imagens e diagramas estáticos. O script inclui cabeçalho com o logo DataRain, rodapé em todas as páginas e marcadores no PDF para as seções.
 
-O conversor é útil quando você quer processar localmente o site pronto ou gerar um PDF com marcadores próprios. Para a geração integrada diretamente ao `mkdocs build`, veja também [Exportação para PDF](exportacao-para-pdf.md), que documenta o `mkdocs-exporter` e seu agregador.
+O conversor é útil quando você quer processar localmente o site pronto ou gerar um PDF com marcadores próprios. Para aprender a alterar o layout, cabeçalho, rodapé, tabelas e links, veja [Personalizar o PDF com Playwright e pypdf](personalizacao-pdf.md). Para a geração integrada diretamente ao `mkdocs build`, veja também [Exportação para PDF](exportacao-para-pdf.md), que documenta o `mkdocs-exporter` e seu agregador.
 
 <a class="md-button md-button--primary" href="../assets/documentacao-local.pdf" download>Baixar a documentação completa em PDF</a>
 

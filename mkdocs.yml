@@ -9,6 +9,7 @@ hooks:
 repo_url: https://github.com/dataRainBR/mkdocs-documentation
 repo_name: dataRainBR/mkdocs-documentation
 edit_uri: edit/main/docs/
+site_url: https://datarainbr.github.io/mkdocs-documentation/
 
 nav:
   - Início: index.md
@@ -27,6 +28,7 @@ nav:
       - "Draw.io com drawpyo": drawpyo.md
       - "Exportação para PDF": exportacao-para-pdf.md
       - "Conversão PDF local": conversao-pdf-local.md
+      - "Personalização do PDF": personalizacao-pdf.md
       - Taskipy: taskipy.md
       - Ruff: ruff.md
       - pytest: pytest.md
