@@ -1,6 +1,6 @@
 # GitHub CLI (`gh`)
 
-O **GitHub CLI**, chamado pelo comando `gh`, permite trabalhar com repositórios, issues, pull requests e GitHub Actions pelo terminal. Ele complementa o Git: comandos como `git pull` e `git push` continuam sendo comandos Git, enquanto `gh` facilita operações que normalmente seriam feitas pela interface web do GitHub.
+O **GitHub CLI**, chamado pelo comando `gh`, permite trabalhar com repositórios, issues, pull requests e GitHub Actions pelo terminal. Ele complementa o Git: comandos como `git pull` e `git push` continuam sendo comandos Git, enquanto `gh` facilita operações que normalmente seriam feitas pela interface web do GitHub. Para um guia dedicado ao versionamento local, consulte [Git](git.md); para workflows e arquivos YAML, consulte [GitHub Actions](github-actions.md).
 
 Neste capítulo, os comandos são apresentados no PowerShell e também funcionam, em geral, em terminais macOS e Linux. Não cole tokens ou senhas em comandos compartilhados, arquivos do projeto ou capturas de tela.
 

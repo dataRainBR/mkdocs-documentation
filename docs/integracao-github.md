@@ -15,31 +15,18 @@ Nenhuma dessas três coisas depende de hospedar o site no GitHub Pages especific
 O `mkdocs.yml` deste projeto define:
 
 ```yaml
-repo_url: https://github.com/seu-usuario/teste-mkdocks   # Placeholder — substitua pela URL real do seu repositório
-repo_name: seu-usuario/teste-mkdocks
+repo_url: https://github.com/dataRainBR/mkdocs-documentation
+repo_name: dataRainBR/mkdocs-documentation
 edit_uri: edit/main/docs/
 ```
 
 - **`repo_url`**: a URL do repositório. É esse valor que o Material usa para exibir o ícone do GitHub (ou GitLab/Bitbucket, dependendo do domínio) no cabeçalho do site, funcionando como um link direto para a página do projeto.
-- **`repo_name`**: o texto exibido junto desse link no cabeçalho. Aqui está configurado como `seu-usuario/teste-mkdocks`, no formato usuário/repositório, que é a convenção mais comum — mas poderia ser qualquer rótulo, como apenas o nome do projeto.
+- **`repo_name`**: o texto exibido junto desse link no cabeçalho. Aqui usa o formato organização/repositório, mas poderia ser qualquer rótulo, como apenas o nome do projeto.
 - **`edit_uri`**: o caminho relativo, anexado a `repo_url`, usado para montar o link "editar esta página" de cada arquivo. O valor `edit/main/docs/` instrui o MkDocs a montar URLs no formato `repo_url/edit/main/docs/<caminho-do-arquivo>.md` — ou seja, "editar", na branch `main`, dentro da pasta `docs/`. É exatamente essa a URL que o GitHub usa para abrir seu editor de arquivos online.
 
-**Importante — isto é um placeholder.** A URL `https://github.com/seu-usuario/teste-mkdocks` não aponta para um repositório real. Este projeto, na máquina em que a documentação foi escrita, ainda não tem nenhum remote Git configurado:
+Ao usar este modelo em outro repositório, substitua a organização, o repositório e a branch pelos valores reais:
 
-```text
-$ git remote -v
-(nenhuma saída)
-```
-
-Ou seja, não existe hoje um "GitHub deste projeto" para apontar de verdade. Os valores de `repo_url`, `repo_name` e `edit_uri` foram preenchidos com um nome de exemplo (`seu-usuario/teste-mkdocks`) apenas para que a estrutura de configuração completa pudesse ser demonstrada e testada nesta página e no `mkdocs.yml`.
-
-Antes de publicar o seu site, você deve:
-
-1. Criar (ou identificar) o repositório real no GitHub que hospeda este projeto.
-2. Substituir `seu-usuario/teste-mkdocks` em `repo_url` e `repo_name` pelo usuário/organização e nome reais desse repositório.
-3. Confirmar que o nome da branch em `edit_uri` (`main`, no exemplo) corresponde à branch padrão real do seu repositório — se ela se chamar `master` ou outra coisa, `edit_uri` deve ser ajustado de acordo.
-
-Enquanto esses valores continuarem como placeholder, os botões de edição/visualização descritos na próxima seção vão gerar links que não funcionam (apontam para um repositório inexistente). Isso não impede o `mkdocs build`, mas também não tem utilidade real até que a URL seja corrigida.
+Confirme o nome da branch padrão e onde os arquivos Markdown estão localizados. Se a branch se chamar `master`, por exemplo, altere `edit_uri` para usar `edit/master/docs/`.
 
 ## 3. `theme.features`: `content.action.edit` e `content.action.view`
 
@@ -77,22 +64,17 @@ Esse plugin lê o histórico `git log` de cada arquivo em `docs/` e, a partir de
 - a **data de criação** do arquivo (graças a `enable_creation_date: true`), obtida do commit mais antigo que o introduziu;
 - ambas formatadas de forma relativa — "há 2 dias", "há 3 meses" — em vez de uma data absoluta, graças a `type: timeago`.
 
-**Importante — este repositório ainda não tem nenhum commit.** Como já mostrado, `git log` neste projeto retorna:
+O plugin depende do histórico Git dos arquivos. Para conferir se o clone local tem histórico:
 
 ```text
-$ git log --oneline -5
-fatal: your current branch 'master' does not have any commits yet
+git log --oneline -5
 ```
 
-Sem nenhum commit, não existe histórico Git algum para o plugin consultar — nem para esta página, nem para nenhuma outra. Sem um ajuste, isso faria o `git-revision-date-localized` falhar e interromper o `mkdocs build` com um erro, já que ele não teria nenhuma data real para exibir.
-
-É exatamente por isso que a opção `fallback_to_build_date: true` foi incluída na configuração. Com ela, nessa condição — arquivo sem histórico git —, o plugin não lança um erro fatal: em vez disso, ele usa a data e hora em que o `mkdocs build` está sendo executado como substituta (*fallback*) para a data de revisão/criação daquela página. O build continua normalmente, só que exibindo "a data de hoje" em todas as páginas, em vez da data real de cada alteração.
-
-Assim que o repositório passar a ter commits reais — depois de um `git add .` seguido de `git commit`, por exemplo —, o plugin passa a encontrar histórico Git de verdade para cada arquivo, e as datas exibidas em cada página do site passam a refletir automaticamente o momento real da última alteração (e da criação) de cada arquivo, sem que nenhuma configuração adicional seja necessária.
+Se o checkout não incluir commits — por exemplo, um clone raso ou uma pasta ainda sem commits —, o plugin não terá datas históricas para exibir. A opção `fallback_to_build_date: true` permite usar a data do build como alternativa. No workflow deste projeto, `actions/checkout` usa `fetch-depth: 0` para disponibilizar o histórico completo.
 
 ## 5. GitHub Actions: o workflow real de CI/CD
 
-O mesmo problema de "histórico Git insuficiente" descrito na seção anterior também pode acontecer durante um build automatizado em CI/CD — e, a partir de agora, ele não é mais apenas uma possibilidade teórica neste projeto. Existe um workflow real e funcional em `.github/workflows/docs.yml`, e os valores de `repo_url`, `repo_name` e `edit_uri` no `mkdocs.yml` (vistos na Seção 2) já não são mais placeholder: eles apontam para o repositório real `dataRainBR/mkdocs-documentation`, na branch `main`. Esta seção apresenta o conteúdo exato desse workflow e explica, passo a passo, o que cada etapa faz.
+Existe um workflow real em `.github/workflows/docs.yml`, e os valores de `repo_url`, `repo_name` e `edit_uri` no `mkdocs.yml` apontam para `dataRainBR/mkdocs-documentation`, na branch `main`. Esta seção apresenta o conteúdo desse workflow e explica, passo a passo, o que cada etapa faz.
 
 ### 5.1 O arquivo `.github/workflows/docs.yml`
 
@@ -166,7 +148,7 @@ O workflow dispara automaticamente a cada `push` na branch `main`, e também pod
 
 ### 5.2 Passo a passo do job `build`
 
-1. **Clonar o repositório** (`actions/checkout@v4` com `fetch-depth: 0`) — baixa o histórico completo de commits, em vez do padrão `fetch-depth: 1` (apenas o commit mais recente). Esse histórico completo é exatamente o que falta na Seção 4 quando o `git-revision-date-localized` cai no `fallback_to_build_date`: aqui, como o repositório real terá um histórico de commits de verdade (diferente da máquina local em que esta documentação foi escrita, que não tinha nenhum commit), o plugin consegue calcular as datas reais de última modificação e criação de cada página, sem recorrer ao fallback.
+1. **Clonar o repositório** (`actions/checkout@v4` com `fetch-depth: 0`) — baixa o histórico completo de commits, em vez do padrão `fetch-depth: 1` (apenas o commit mais recente). Assim, o `git-revision-date-localized` consegue calcular as datas reais de modificação e criação das páginas.
 
 2. **Configurar Node.js** (`actions/setup-node@v4`) **e instalar TypeDoc** (`npm install --global typedoc`) — a diretiva `::: calcular-media` (handler `typescript` do `mkdocstrings`, usada na página [Exemplos de código](exemplos-codigo.md)) depende do TypeDoc. O runner do GitHub Actions também precisa ter o Node.js disponível para executar essa ferramenta.
 
@@ -273,5 +255,90 @@ gh run list --workflow docs.yml --branch main
 
 O primeiro comando agenda a execução; o segundo permite localizar o ID para acompanhá-la com `gh run watch`. A publicação só estará disponível quando o build e o deploy terminarem com sucesso.
 
-!!! note
-    Adicionar um remote git ao repositório local, com `git remote add origin https://github.com/dataRainBR/mkdocs-documentation.git`, é uma ação segura e reversível: ela apenas registra, no `.git/config` local, um endereço de referência, sem enviar nenhum dado ao repositório remoto por si só. Já o commit e o push do código para esse repositório real — a etapa que de fato dispara o workflow descrito nesta seção e torna o site publicável — é uma decisão que depende de você revisar e confirmar o conteúdo a ser publicado, e deve ser executada separadamente, por fora da geração automática desta documentação.
+## 6. MkDocs com GitHub Enterprise e repositórios privados
+
+GitHub Enterprise tem duas opções de implantação, e é importante distingui-las:
+
+- **GitHub Enterprise Cloud (GHEC)** é o serviço hospedado pelo GitHub em `github.com` ou no domínio de residência de dados da empresa. Ele permite publicar um GitHub Pages privado para uma organização Enterprise Cloud.
+- **GitHub Enterprise Server (GHES)** é instalado e administrado pela própria empresa. O endereço da instância, o acesso de rede, as políticas de Actions, os runners e a disponibilidade de Pages dependem da configuração e da versão mantidas pelos administradores.
+
+### 6.1 Apontar MkDocs para o GitHub Enterprise
+
+No GitHub Enterprise Cloud padrão, os URLs do repositório usam `github.com`. No Enterprise Server, copie a URL HTTPS do repositório na instância da empresa. Use o mesmo host em `repo_url`; o `edit_uri` deve apontar para a branch e a pasta que contêm os Markdown:
+
+```yaml
+repo_url: https://github.empresa.example/ORGANIZACAO/REPOSITORIO
+repo_name: ORGANIZACAO/REPOSITORIO
+edit_uri: edit/main/docs/
+```
+
+Configure também `site_url` com o endereço que aparece nas configurações do GitHub Pages. Sites privados podem usar um subdomínio diferente do endereço público:
+
+```yaml
+site_url: https://SUBDOMINIO-PRIVADO.pages.github.io/
+```
+
+Confirme o formato do host e do caminho com a opção de clonar do repositório Enterprise e com a página **Settings → Pages** da instância. Em GHES, o administrador pode usar caminhos ou domínios próprios.
+
+### 6.2 Construir e publicar a partir de um repositório privado
+
+O workflow de MkDocs pode permanecer em `.github/workflows/docs.yml`. Para publicar com o workflow do GitHub Pages, ele precisa das permissões abaixo:
+
+```yaml
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+```
+
+`actions/checkout` usa por padrão o `GITHUB_TOKEN` para ler o próprio repositório privado. Não é necessário criar um token pessoal apenas para clonar o código do workflow. Se o build depender de outro repositório privado, use um GitHub App ou um token de acesso fino com somente a permissão de leitura necessária, guarde-o como secret e não o imprima nos logs:
+
+```yaml
+- name: Clonar dependência privada
+  uses: actions/checkout@v4
+  with:
+    repository: ORGANIZACAO/DEPENDENCIA-PRIVADA
+    token: {% raw %}${{ secrets.REPO_READ_TOKEN }}{% endraw %}
+    path: dependencias/privadas
+```
+
+Além do YAML, confirme que Actions está habilitado para a organização e que as políticas Enterprise permitem as actions utilizadas, incluindo `actions/checkout`, `actions/upload-pages-artifact` e `actions/deploy-pages`. Em GHES, o administrador também precisa disponibilizar runners e acesso de rede aos repositórios e dependências do build.
+
+Para publicar o site:
+
+1. Abra **Settings → Pages → Build and deployment** no repositório.
+2. Selecione **GitHub Actions** como fonte de publicação.
+3. Quando o plano e a organização permitirem, configure a visibilidade do site como **Private** em **Settings → Pages**.
+4. Envie uma alteração ou inicie o workflow manualmente e confira o job `deploy` na aba **Actions**.
+
+**Atenção à visibilidade:** um repositório privado não torna automaticamente o site Pages privado. Um site publicado como público pode ser acessado por qualquer pessoa, mesmo que o código-fonte esteja em um repositório privado. A publicação privada do Pages está disponível no **GitHub Enterprise Cloud**; nesse modo, o site fica acessível somente a pessoas com acesso de leitura ao repositório. Não publique dados confidenciais no site, nos artefatos ou nos logs do workflow.
+
+No GitHub Enterprise Server, não presuma que as opções de publicação privada do Enterprise Cloud estejam disponíveis. Confirme com o administrador a política de Pages, a URL interna e o modelo de autenticação aceito pela instalação.
+
+### 6.3 Custos e limites
+
+O GitHub Enterprise é um plano pago. A cobrança exata pode depender do contrato, da quantidade de usuários e dos produtos habilitados; consulte a página de preços e a área de faturamento do seu Enterprise. A documentação oficial de cobrança do Actions registra as cotas atuais de compute e armazenamento:
+
+| Item do GitHub Enterprise Cloud | Referência oficial consultada em novembro de 2026 |
+|---|---|
+| Assinatura Enterprise | A página pública de preços lista atualmente **US$ 21 por usuário/mês** para Enterprise. Contratos empresariais podem ter condições diferentes; confira a [página de preços do GitHub](https://github.com/pricing) e o contrato da organização. |
+| Compute incluído do Actions | A documentação de cobrança lista US$ 300 de uso de compute incluído por ciclo, aproximadamente 50.000 minutos em runner Linux padrão. A página de preços também apresenta 50.000 minutos mensais para Enterprise. |
+| Armazenamento de artefatos | A documentação de cobrança lista 50 GB compartilhados com o armazenamento do GitHub Packages. |
+| Cache do Actions | 10 GB por repositório incluídos; uso acima da franquia pode ser cobrado conforme a configuração e o uso. |
+| Pages privado | Requer uma organização no GitHub Enterprise Cloud; o custo da assinatura Enterprise se aplica. |
+
+O uso de runners hospedados pelo GitHub em repositórios privados ou internos pode consumir o compute incluído; após a franquia, o uso adicional é cobrado se houver faturamento habilitado. Os custos são atribuídos ao proprietário do repositório. A documentação atual também informa que runners self-hosted não geram cobrança de uso do Actions, mas a infraestrutura, operação e manutenção dessas máquinas continuam sendo responsabilidade da empresa. O uso padrão de runners para GitHub Pages é indicado como gratuito pela documentação de cobrança.
+
+No GitHub Enterprise Server, licenciamento, infraestrutura e cobrança dependem do contrato e da instalação; a tabela do GitHub Enterprise Cloud não deve ser aplicada automaticamente ao GHES.
+
+Consulte sempre os valores vigentes antes de estimar o orçamento:
+
+- [Preços do GitHub](https://github.com/pricing)
+- [Cobrança do GitHub Actions e cotas por plano](https://docs.github.com/billing/concepts/product-billing/github-actions)
+- [Calculadora de preços do Actions](https://github.com/pricing/calculator?feature=actions)
+- [Ver uso e faturamento dos produtos](https://docs.github.com/billing/how-tos/products/view-productlicense-use)
+- [GitHub Enterprise Cloud](https://docs.github.com/enterprise-cloud@latest/admin/overview/about-github-enterprise-cloud)
+- [Publicar um site GitHub Pages privado](https://docs.github.com/enterprise-cloud@latest/pages/getting-started-with-github-pages/about-privately-published-github-pages-sites)
+- [Configurar uma fonte de publicação do Pages](https://docs.github.com/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+
+Para instruções de colaboração e versionamento, veja [Git](git.md). Para configurar e acompanhar automações, veja [GitHub Actions](github-actions.md).

@@ -30,6 +30,8 @@ nav:
       - "Pacotes utilizados": pacotes-utilizados.md
       - Referências: referencias.md
   - GitHub:
+      - Git: git.md
+      - "GitHub Actions": github-actions.md
       - Integração: integracao-github.md
       - "CLI (`gh`)": github-cli.md
 
