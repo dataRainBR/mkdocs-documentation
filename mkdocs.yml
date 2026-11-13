@@ -24,6 +24,9 @@ nav:
       - Diagramas: diagramas-arquitetura.md
   - Ferramentas:
       - uv: uv.md
+      - Taskipy: taskipy.md
+      - Ruff: ruff.md
+      - pytest: pytest.md
       - Playwright: playwright.md
       - Preview: playwright-preview.md
       - "Docker e linguagens": dockerfile-outras-linguagens.md
