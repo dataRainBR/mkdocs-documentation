@@ -1,6 +1,12 @@
 # Exemplos de código
 
-Esta página mostra duas formas diferentes de exibir exemplos de código na documentação: um **bloco de código estático**, que é apenas texto formatado dentro da página, e a **documentação gerada automaticamente** pelo plugin `mkdocstrings` a partir do código-fonte real do projeto. Os dois exemplos a seguir usam a mesma função, `calcular_media`, definida no arquivo `teste.py` na raiz do projeto.
+Esta página ensina a documentar código Python e TypeScript no MkDocs. Em ambos os casos, o fluxo é: escrever a documentação no próprio código, configurar o handler correspondente e incluir uma diretiva `mkdocstrings` na página Markdown. O resultado aparece como documentação HTML gerada durante o build.
+
+## Python com docstrings no formato Google
+
+### 1. Escreva a função e a docstring em `teste.py`
+
+O formato Google organiza a explicação em seções como `Args`, `Returns` e `Raises`. A descrição do argumento fica indentada sob `Args`; inclua o tipo na anotação Python e descreva o significado no texto:
 
 ```python
 def calcular_media(valores: list[float]) -> float:
@@ -22,13 +28,44 @@ def calcular_media(valores: list[float]) -> float:
     return sum(valores) / len(valores)
 ```
 
+### 2. Configure o handler Python no `mkdocs.yml`
+
+Em `plugins.mkdocstrings.handlers.python`, defina o caminho onde o módulo pode ser encontrado e informe que o parser deve interpretar docstrings Google:
+
+````yaml
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            show_source: true
+            show_root_heading: true
+            docstring_style: google
+        typescript: {}
+````
+
+`paths: [.]` permite localizar `teste.py` na raiz do projeto. `docstring_style: google` faz o handler reconhecer as seções no formato Google; não altera a escrita do docstring.
+
+### 3. Inclua o objeto na página Markdown
+
+Escreva a diretiva no arquivo Markdown sem cercá-la por crases:
+
+```markdown
+::: teste.calcular_media
+```
+
+**Saída renderizada pelo MkDocs:** a diretiva abaixo é processada de verdade no build. O cabeçalho, a assinatura e as seções da documentação vêm de `teste.py`:
+
+::: teste.calcular_media
+
 ## Bloco de código estático
 
 O trecho de Python mostrado acima é um **bloco de código estático**: um texto fixo, delimitado por crases (` ``` `) com a linguagem `python` indicada logo após as crases de abertura. Essa é a forma mais simples de exibir um exemplo de código em uma página MkDocs — você simplesmente copia e cola o conteúdo do arquivo-fonte (neste caso, `teste.py`) diretamente dentro do Markdown da página.
 
 Não há nenhuma "mágica" por trás desse bloco: o MkDocs não lê `teste.py` para gerá-lo, não executa nada e não sabe que essa função realmente existe no projeto. O texto que aparece é exatamente o texto que foi digitado (ou colado) no arquivo `exemplos-codigo.md`. A única coisa que o MkDocs faz é aplicar o destaque de sintaxe (*syntax highlighting*) do Python ao conteúdo, graças às extensões `pymdownx.highlight` e `pymdownx.superfences` configuradas no `mkdocs.yml` — mas o texto em si é escrito manualmente por quem edita a página.
 
-## Documentação via mkdocstrings
+### Como a documentação é gerada
 
 Agora, em vez de colar o código novamente, vamos deixar o plugin `mkdocstrings` gerar a documentação da mesma função automaticamente a partir do código-fonte. A sintaxe usada para isso é a seguinte:
 
@@ -36,9 +73,7 @@ Agora, em vez de colar o código novamente, vamos deixar o plugin `mkdocstrings`
 ::: teste.calcular_media
 ```
 
-Essa linha é chamada de **diretiva** do `mkdocstrings`. Ela não é um bloco de código: é uma instrução especial, reconhecida pelo plugin durante a geração do site, escrita diretamente no corpo da página Markdown (sem as crases de bloco de código). Abaixo, a mesma diretiva é inserida de verdade na página, para que o `mkdocstrings` a processe e renderize o resultado:
-
-::: teste.calcular_media
+Essa linha é chamada de **diretiva** do `mkdocstrings`. Ela não é um bloco de código: é uma instrução especial, reconhecida pelo plugin durante a geração do site, escrita diretamente no corpo da página Markdown (sem as crases de bloco de código). A diretiva inserida acima é processada pelo `mkdocstrings` e substituída pelo resultado gerado.
 
 Passo a passo do que acontece quando o comando `mkdocs build` (ou `mkdocs serve`) processa essa diretiva:
 
@@ -122,20 +157,49 @@ typedoc --version
 
 Se `typedoc` não for reconhecido, abra um novo terminal para atualizar o `PATH` ou confira se `%APPDATA%\npm` está incluído nele.
 
-### Documentação via mkdocstrings
+### Configure o handler e o pacote TypeScript
 
-A sintaxe da diretiva para o exemplo em TypeScript é a seguinte:
+O handler TypeScript é habilitado em `mkdocs.yml` com `typescript: {}`. Para cada pacote documentado, o TypeDoc também precisa localizar o projeto e seus arquivos-fonte. Neste exemplo, o pacote está em `src/calcular-media/`:
+
+````yaml
+plugins:
+  - mkdocstrings:
+      handlers:
+        typescript: {}
+````
+
+O `package.json` identifica o pacote pelo campo `name`. Esse mesmo nome será usado na diretiva:
+
+````json
+{
+  "name": "calcular-media",
+  "private": true
+}
+````
+
+O arquivo `src/calcular-media/typedoc.json` indica ao TypeDoc o ponto de entrada `.ts` e o `tsconfig.json` do pacote:
+
+````json
+{
+  "extends": ["../../typedoc.base.json"],
+  "entryPointStrategy": "expand",
+  "entryPoints": ["src/index.ts"],
+  "tsconfig": "tsconfig.json"
+}
+````
+
+Documente as funções no próprio TypeScript com comentários JSDoc (`/** ... */`) e tags como `@param`, `@returns` e `@throws`, como no exemplo de `calcularMedia` acima. O TypeDoc usa esse arquivo de configuração para extrair a documentação.
+
+O identificador `calcular-media` não é um caminho de arquivo nem o nome de uma função TypeScript: é o valor de `name` em `package.json`. O handler padrão do projeto é o Python, por isso informe `handler: typescript` na diretiva.
+
+Na página `.md`, escreva a diretiva sem cercá-la por crases:
 
 ```markdown
 ::: calcular-media
     handler: typescript
 ```
 
-O identificador `calcular-media` não é um caminho de arquivo, como aconteceu no exemplo Python (`teste.calcular_media`, no formato `módulo.função`). Aqui, `calcular-media` é o valor do campo `name` definido em `src/calcular-media/package.json` — ou seja, o handler `typescript` identifica o pacote pelo nome declarado em seu `package.json`, não pelo caminho até a função dentro dele.
-
-A linha `handler: typescript` também é necessária por um motivo específico deste projeto: o handler padrão (`default_handler`) configurado no `mkdocs.yml` é o `python`, já que não há nenhuma opção `default_handler: typescript` definida. Sem indicar `handler: typescript` explicitamente nesta diretiva, o `mkdocstrings` tentaria interpretar `calcular-media` usando o handler Python, o que falharia.
-
-A diretiva de verdade é inserida abaixo, para que seja processada pelo `mkdocstrings` quando o TypeDoc estiver disponível:
+**Saída renderizada pelo MkDocs:** a diretiva abaixo é processada no build. O handler localiza o pacote `calcular-media`, executa o TypeDoc e apresenta a documentação extraída do `src/index.ts`:
 
 ::: calcular-media
     handler: typescript
